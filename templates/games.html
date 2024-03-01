@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+</head>
+<body>
+    {% for game in games %}
+        {{game.title}}<br>
+        {{game.cover_image_url}}<br>
+        {{game.description}}<br>
+        {{game.release_date}}<br>
+        {{game.genre}}<br>
+        {{game.developer(s)}}<br>
+        {{game.publisher(s)}}<br>
+        {{game.platform}}<br>
+        {{game.mode(s)}}<br>
+        {{game.average_user_rating}}<br>
+        {{game.extra_info}}<br>
+    {% endfor %}
+</body>
+</html>
