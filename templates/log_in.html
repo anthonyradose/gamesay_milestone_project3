@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3 class="text-center">Sign Up!</h3>
+<h3 class="text-center">Log In!</h3>
 
 <div class="row">
-    <form class="col-md-8 offset-md-2" method="POST" action="{{ url_for('sign_up') }}">
+    <form class="col-md-8 offset-md-2" method="POST" action="{{ url_for('log_in') }}">
         <div class="card">
             <div class="card-body">
                 <!-- Username -->
@@ -27,9 +27,9 @@
                             class="form-control" required>
                     </div>
                 </div>
-                <!-- Register Button -->
+                <!-- Log In Button -->
                 <button type="submit" class="btn btn-primary btn-lg w-100">
-                    Register
+                    Log In
                 </button>
             </div>
         </div>
@@ -39,10 +39,11 @@
 <div class="row">
     <div class="col-12">
         <p class="text-center">
-            Already a member?
-            <a href="{{ url_for('log_in') }}" class="text-primary">Log In</a>
+            New Here?
+            <a href="{{ url_for('sign_up') }}" class="text-primary">Sign Up!</a>
         </p>
     </div>
 </div>
+
 
 {% endblock %}

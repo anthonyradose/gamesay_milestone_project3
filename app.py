@@ -40,6 +40,27 @@ def sign_up():
         flash("Registration Successful!")
     return render_template("sign_up.html")
 
+@app.route("/log_in", methods=["GET", "POST"])
+def log_in():
+    if request.method == "POST":
+        existing_user = mongo.db.users.find_one(
+            {"username": request.form.get("username").lower()})
+
+        if existing_user:
+            if check_password_hash(
+                existing_user["password"], request.form.get("password")):
+                    session["user"] = request.form.get("username").lower()
+                    flash("Welcome, {}".format(request.form.get("username")))
+            else:
+                flash("Incorrect Username and/or Password")
+                return redirect(url_for("log_in"))
+
+        else:
+            flash("Incorrect Username and/or Password")
+            return redirect(url_for("log_in"))
+
+    return render_template("log_in.html")
+
 @app.route("/get_games")
 def get_games():
     games = mongo.db.games.find()
