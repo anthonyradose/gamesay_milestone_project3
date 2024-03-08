@@ -27,7 +27,7 @@ def sign_up():
             {"username": request.form.get("username").lower()})
 
         if existing_user:
-            flash("Username already exists")
+            flash("User already exists")
             return redirect(url_for("sign_up"))
 
         sign_up = {
@@ -37,7 +37,8 @@ def sign_up():
         mongo.db.users.insert_one(sign_up)
 
         session["user"] = request.form.get("username").lower()
-        flash("Registration Successful!")
+        flash("Sign up Successful!")
+        return redirect(url_for("profile", username=session["user"]))
     return render_template("sign_up.html")
 
 @app.route("/log_in", methods=["GET", "POST"])
@@ -51,6 +52,8 @@ def log_in():
                 existing_user["password"], request.form.get("password")):
                     session["user"] = request.form.get("username").lower()
                     flash("Welcome, {}".format(request.form.get("username")))
+                    return redirect(url_for(
+                        "profile", username=session["user"]))
             else:
                 flash("Incorrect Username and/or Password")
                 return redirect(url_for("log_in"))
@@ -60,6 +63,12 @@ def log_in():
             return redirect(url_for("log_in"))
 
     return render_template("log_in.html")
+
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
+    username = mongo.db.users.find_one(
+        {"username": session["user"]})["username"]
+    return render_template("profile.html", username=username)
 
 @app.route("/get_games")
 def get_games():

@@ -37,7 +37,7 @@
                             <a class="nav-link" href="{{url_for('log_in')}}">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Profile</a>
+                            <a class="nav-link" href="{{url_for('profile', username=session['user'])}}">Profile</a>
                         </li>
                     </ul>
                 </div>
@@ -45,7 +45,6 @@
         </nav>
     </header>
     <section>
-        <!-- flash messages -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
