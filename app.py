@@ -92,6 +92,20 @@ def get_games():
 def search_game():
     return render_template("search_game.html")
 
+
+@app.route("/search_results", methods=["GET", "POST"])
+def search_results():
+    query = request.form.get("query")
+    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        games = [game for game in data.get("results", [])]
+        return render_template("search_results.html", games=games)
+    else:
+        return "Error searching for the game."
+
+
 if __name__ == "__main__":
         app.run(host=os.environ.get("IP"),
         port=int(os.environ.get("PORT")),

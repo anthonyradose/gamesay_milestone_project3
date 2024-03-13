@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Search Results</h1>
+<ul>
+    {% for game in games %}
+    <a href="{{url_for('game_info', game=game)}}">
+        <li>{{ game.name }}</li>
+    </a>
+    {% endfor %}
+</ul>
+{% endblock %}
