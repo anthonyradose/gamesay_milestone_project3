@@ -106,6 +106,34 @@ def search_results():
         return "Error searching for the game."
 
 
+@app.route("/game_info")
+def game_info():
+    game = request.args.get("game")
+    game_dict = eval(game)
+    url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
+    url_tags = f"https://api.rawg.io/api/tags?key={RAWG_API_KEY}"
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        game_data = response.json()
+        
+        response_tags = requests.get(url_tags)
+        if response_tags.status_code == 200:
+            tags_data = response_tags.json()
+            
+            game_tags = set(tag['slug'] for tag in tags_data['results'])
+            
+            relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if tag['slug'] in game_tags]
+            
+            return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
+        else:
+            return f"Error fetching tags: {response_tags.status_code}"
+    else:
+        return f"Error fetching game details: {response.status_code}"
+
+
+
+
 if __name__ == "__main__":
         app.run(host=os.environ.get("IP"),
         port=int(os.environ.get("PORT")),
