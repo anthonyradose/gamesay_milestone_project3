@@ -1,4 +1,6 @@
 import os
+import json
+import requests
 from flask import Flask, flash, render_template, redirect, request, session, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -8,6 +10,9 @@ if os.path.exists("env.py"):
     
     
 app = Flask(__name__)
+
+RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
+RAWG_API_URL = "https://api.rawg.io/api/games"
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
@@ -82,6 +87,10 @@ def log_out():
 def get_games():
     games = mongo.db.games.find()
     return render_template("games.html", games = games)
+
+@app.route("/search_game")
+def search_game():
+    return render_template("search_game.html")
 
 if __name__ == "__main__":
         app.run(host=os.environ.get("IP"),
