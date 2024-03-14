@@ -107,13 +107,26 @@ def search_game():
 
 @app.route("/search_results", methods=["GET", "POST"])
 def search_results():
-    query = request.form.get("query")
-    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}"
+    if request.method == "POST":
+        query = request.form.get("query")
+    else:
+        query = request.args.get("query")
+
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+
+    start_index = (page - 1) * per_page
+
+    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={
+        query}&page_size={per_page}&page={page}"
     response = requests.get(url)
+
     if response.status_code == 200:
         data = response.json()
-        games = [game for game in data.get("results", [])]
-        return render_template("search_results.html", games=games)
+        games = data.get("results", [])
+        total_results = data.get("count", 0)
+
+        return render_template("search_results.html", games=games, total_results=total_results, per_page=per_page, page=page, query=query)
     else:
         return "Error searching for the game."
 
