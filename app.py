@@ -83,10 +83,10 @@ def log_out():
     session.pop("user")
     return redirect(url_for("log_in"))
 
-@app.route("/get_games")
-def get_games():
-    games = mongo.db.games.find()
-    return render_template("games.html", games = games)
+@app.route("/get_game_reviews")
+def get_game_reviews():
+    games = mongo.db.game_reviews.find()
+    return render_template("game_reviews.html", games = games)
 
 @app.route("/search_game")
 def search_game():
@@ -162,7 +162,7 @@ def add_game():
         }
 
        
-        mongo.db.games.insert_one(game)
+        mongo.db.game_reviews.insert_one(game)
 
         flash("Game added successfully!")
         return redirect(url_for("search_game")) 

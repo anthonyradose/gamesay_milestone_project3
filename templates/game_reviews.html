@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Game Reviews</h2>
+    <ul>
+        {% for game in games %}
+            <li>
+                <strong>Name:</strong> {{ game.name }}<br>
+                <strong>Released:</strong> {{ game.released }}<br>
+                <strong>Genres:</strong> {{ game.genres | join(", ") }}<br>
+                <strong>Developers:</strong> {{ game.developers | join(", ") }}<br>
+                <strong>Publishers:</strong> {{ game.publishers | join(", ") }}<br>
+                <strong>Platforms:</strong> {{ game.platforms | join(", ") }}<br>
+                <strong>Tags:</strong> {{ game.tags | join(", ") }}<br>
+                <strong>Review:</strong> {{ game.review }}<br>
+                <strong>Rating:</strong> {{ game.rating }}<br>
+                <strong>Description:</strong> {{ game.description | safe }}<br>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
