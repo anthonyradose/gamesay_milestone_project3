@@ -7,8 +7,8 @@ from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
-    
-    
+
+
 app = Flask(__name__)
 
 RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
@@ -24,6 +24,7 @@ mongo = PyMongo(app)
 @app.route("/")
 def home():
     return render_template("base.html")
+
 
 @app.route("/sign_up", methods=["GET", "POST"])
 def sign_up():
@@ -46,6 +47,7 @@ def sign_up():
         return redirect(url_for("profile", username=session["user"]))
     return render_template("sign_up.html")
 
+
 @app.route("/log_in", methods=["GET", "POST"])
 def log_in():
     if request.method == "POST":
@@ -54,11 +56,11 @@ def log_in():
 
         if existing_user:
             if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = request.form.get("username").lower()
-                    flash("Welcome, {}".format(request.form.get("username")))
-                    return redirect(url_for(
-                        "profile", username=session["user"]))
+                    existing_user["password"], request.form.get("password")):
+                session["user"] = request.form.get("username").lower()
+                flash("Welcome, {}".format(request.form.get("username")))
+                return redirect(url_for(
+                    "profile", username=session["user"]))
             else:
                 flash("Incorrect Username and/or Password")
                 return redirect(url_for("log_in"))
@@ -69,13 +71,21 @@ def log_in():
 
     return render_template("log_in.html")
 
+# @app.route("/profile/<username>", methods=["GET", "POST"])
+# def profile(username):
+#     username = mongo.db.users.find_one(
+#         {"username": session["user"]})["username"]
+#     if session["user"]:
+#         return render_template("profile.html", username=username)
+#     return redirect(url_for("log_in"))
+
+
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
-    username = mongo.db.users.find_one(
-        {"username": session["user"]})["username"]
-    if session["user"]:
-        return render_template("profile.html", username=username)
-    return redirect(url_for("log_in"))
+    current_username = session["user"]
+    user_reviews = mongo.db.game_reviews.find({"username": username})
+    return render_template("profile.html", username=username, user_reviews=user_reviews)
+
 
 @app.route("/log_out")
 def log_out():
@@ -83,10 +93,12 @@ def log_out():
     session.pop("user")
     return redirect(url_for("log_in"))
 
+
 @app.route("/get_game_reviews")
 def get_game_reviews():
     games = mongo.db.game_reviews.find()
-    return render_template("game_reviews.html", games = games)
+    return render_template("game_reviews.html", games=games)
+
 
 @app.route("/search_game")
 def search_game():
@@ -116,15 +128,16 @@ def game_info():
     response = requests.get(url)
     if response.status_code == 200:
         game_data = response.json()
-        
+
         response_tags = requests.get(url_tags)
         if response_tags.status_code == 200:
             tags_data = response_tags.json()
-            
+
             game_tags = set(tag['slug'] for tag in tags_data['results'])
-            
+
             # relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if tag['slug'] in game_tags]
-            relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
+            relevant_tags = [tag['name'] for tag in game_data.get(
+                'tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
             return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
         else:
             return f"Error fetching tags: {response_tags.status_code}"
@@ -135,6 +148,7 @@ def game_info():
 @app.route("/add_game", methods=["POST"])
 def add_game():
     if request.method == "POST":
+        username = session.get("user")
         game_id = request.form.get("game_id")
         name = request.form.get("name")
         description = request.form.get("description")
@@ -148,6 +162,7 @@ def add_game():
         rating = float(request.form.get("rating"))
 
         game = {
+            "username": username,
             "game_id": game_id,
             "name": name,
             "description": description,
@@ -161,17 +176,15 @@ def add_game():
             "rating": rating
         }
 
-       
         mongo.db.game_reviews.insert_one(game)
 
         flash("Game added successfully!")
-        return redirect(url_for("search_game")) 
+        return redirect(url_for("search_game"))
     else:
         return "Method not allowed"
 
 
-
 if __name__ == "__main__":
-        app.run(host=os.environ.get("IP"),
-        port=int(os.environ.get("PORT")),
-        debug=True) #Make false when deployed!
+    app.run(host=os.environ.get("IP"),
+            port=int(os.environ.get("PORT")),
+            debug=True)  # Make false when deployed!
