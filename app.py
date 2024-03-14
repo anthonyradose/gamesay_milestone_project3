@@ -123,14 +123,51 @@ def game_info():
             
             game_tags = set(tag['slug'] for tag in tags_data['results'])
             
-            relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if tag['slug'] in game_tags]
-            
+            # relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if tag['slug'] in game_tags]
+            relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
             return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
         else:
             return f"Error fetching tags: {response_tags.status_code}"
     else:
         return f"Error fetching game details: {response.status_code}"
 
+
+@app.route("/add_game", methods=["POST"])
+def add_game():
+    if request.method == "POST":
+        game_id = request.form.get("game_id")
+        name = request.form.get("name")
+        description = request.form.get("description")
+        released = request.form.get("released")
+        genres = request.form.getlist("genres")
+        developers = request.form.getlist("developers")
+        publishers = request.form.getlist("publishers")
+        platforms = request.form.getlist("platforms")
+        tags = request.form.getlist("tags")
+        review = request.form.get("review")
+        rating = float(request.form.get("rating"))
+
+        game = {
+            "game_id": game_id,
+            "name": name,
+            "description": description,
+            "released": released,
+            "genres": genres,
+            "developers": developers,
+            "publishers": publishers,
+            "platforms": platforms,
+            "tags": tags,
+            "review": review,
+            "rating": rating
+        }
+
+       
+        mongo.db.games.insert_one(game)
+
+        flash("Game added successfully!")
+        return redirect(url_for("search_game")) 
+    else:
+        return "Method not allowed"
 
 
 
