@@ -190,6 +190,41 @@ def add_game():
         return "Method not allowed"
 
 
+@app.route("/edit_review/<review_id>", methods=["GET", "POST"])
+def edit_review(review_id):
+    if request.method == "POST":
+        review = request.form.get("review")
+        rating = float(request.form.get("rating"))
+
+        mongo.db.game_reviews.update_one(
+            {"_id": ObjectId(review_id)},
+            {"$set": {
+                "review": review,
+                "rating": rating
+            }}
+        )
+
+        flash("Game review updated successfully!")
+        return redirect(url_for("get_game_reviews"))
+    else:
+        existing_review = mongo.db.game_reviews.find_one(
+            {"_id": ObjectId(review_id)}
+        )
+        if existing_review:
+            game_id = existing_review["game_id"]
+            url = f"{RAWG_API_URL}/{game_id}?key={RAWG_API_KEY}"
+            response = requests.get(url)
+            if response.status_code == 200:
+                game_data = response.json()
+                return render_template("edit_review.html", review=existing_review, game_data=game_data)
+            else:
+                flash("Error fetching game information")
+                return redirect(url_for("get_game_reviews"))
+        else:
+            flash("Review not found")
+            return redirect(url_for("get_game_reviews"))
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),

@@ -19,6 +19,7 @@
                                 <h5 class="card-title">Game: {{ review.name }}</h5>
                                 <p class="card-text">Review: {{ review.review }}</p>
                                 <p class="card-text"><small class="text-muted">Rating: {{ review.rating }}</small></p>
+                                <a href="{{ url_for('edit_review', review_id=review._id) }}" class="btn btn-primary">Edit</a>
                             </div>
                         </div>
                     </div>
