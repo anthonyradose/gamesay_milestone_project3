@@ -31,7 +31,7 @@
                     {{ platform['platform']['name'] }},
                     {% endfor %}
                 </li>
-                <li class="list-group-item"><strong>Tags:</strong>
+                <li class="list-group-item"><strong>Game-Modes:</strong>
                     {% for tag in relevant_tags %}
                     {{ tag }},
                     {% endfor %}
@@ -45,6 +45,7 @@
             <form action="/add_game" method="post">
                 <input type="hidden" name="game_id" value="{{ game_data['id'] }}">
                 <input type="hidden" name="name" value="{{ game_data['name'] }}">
+                <input type="hidden" name="background_image" value="{{ game_data['background_image'] }}">
                 <input type="hidden" name="description" value="{{ game_data['description'] }}">
                 <input type="hidden" name="released" value="{{ game_data['released'] }}">
                 <input type="hidden" name="genres"

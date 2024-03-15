@@ -71,14 +71,6 @@ def log_in():
 
     return render_template("log_in.html")
 
-# @app.route("/profile/<username>", methods=["GET", "POST"])
-# def profile(username):
-#     username = mongo.db.users.find_one(
-#         {"username": session["user"]})["username"]
-#     if session["user"]:
-#         return render_template("profile.html", username=username)
-#     return redirect(url_for("log_in"))
-
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
@@ -148,7 +140,6 @@ def game_info():
 
             game_tags = set(tag['slug'] for tag in tags_data['results'])
 
-            # relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if tag['slug'] in game_tags]
             relevant_tags = [tag['name'] for tag in game_data.get(
                 'tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
             return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
@@ -164,6 +155,7 @@ def add_game():
         username = session.get("user")
         game_id = request.form.get("game_id")
         name = request.form.get("name")
+        background_image = request.form.get("background_image")
         description = request.form.get("description")
         released = request.form.get("released")
         genres = request.form.getlist("genres")
@@ -178,13 +170,14 @@ def add_game():
             "username": username,
             "game_id": game_id,
             "name": name,
+            "background_image": background_image,
             "description": description,
             "released": released,
             "genres": genres,
             "developers": developers,
             "publishers": publishers,
             "platforms": platforms,
-            "tags": tags,
+            "game_modes": tags,
             "review": review,
             "rating": rating
         }

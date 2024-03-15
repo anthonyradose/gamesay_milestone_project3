@@ -1,20 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Game Reviews</h2>
-    <ul>
+<div class="container">
+    <h2 class="text-center mb-4">Game Reviews</h2>
+    <div class="row">
         {% for game in games %}
-            <li>
-                <strong>Name:</strong> {{ game.name }}<br>
-                <strong>Released:</strong> {{ game.released }}<br>
-                <strong>Genres:</strong> {{ game.genres | join(", ") }}<br>
-                <strong>Developers:</strong> {{ game.developers | join(", ") }}<br>
-                <strong>Publishers:</strong> {{ game.publishers | join(", ") }}<br>
-                <strong>Platforms:</strong> {{ game.platforms | join(", ") }}<br>
-                <strong>Tags:</strong> {{ game.tags | join(", ") }}<br>
-                <strong>Review:</strong> {{ game.review }}<br>
-                <strong>Rating:</strong> {{ game.rating }}<br>
-                <strong>Description:</strong> {{ game.description | safe }}<br>
-            </li>
+        <div class="col-lg-12 mb-4">
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-lg-4">
+                        <img src="{{ game.background_image }}" class="card-img" alt="{{ game.name }}">
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.name }}</h5>
+                            <p class="card-text">{{ game.description | safe }}</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Released:</strong> {{ game.released }}</li>
+                                <li><strong>Genres:</strong> {{ game.genres | join(", ") }}</li>
+                                <li><strong>Developers:</strong> {{ game.developers | join(", ") }}</li>
+                                <li><strong>Publishers:</strong> {{ game.publishers | join(", ") }}</li>
+                                <li><strong>Platforms:</strong> {{ game.platforms | join(", ") }}</li>
+                                <li><strong>Game-Modes:</strong> {{ game.tags | join(", ") }}</li>
+                                <li><strong>Review:</strong> {{ game.review }}</li>
+                                <li><strong>Rating:</strong> {{ game.rating }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}
