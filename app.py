@@ -74,9 +74,9 @@ def log_in():
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
-    current_username = session["user"]
+    current_username = session.get("user")
     user_reviews = mongo.db.game_reviews.find({"username": username})
-    return render_template("profile.html", username=username, user_reviews=user_reviews)
+    return render_template("profile.html", username=username, current_username=current_username, user_reviews=user_reviews)
 
 
 @app.route("/log_out")

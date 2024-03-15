@@ -23,6 +23,8 @@
                                 <li><strong>Game-Modes:</strong> {{ game.tags | join(", ") }}</li>
                                 <li><strong>Review:</strong> {{ game.review }}</li>
                                 <li><strong>Rating:</strong> {{ game.rating }}</li>
+                                <li><strong>By:</strong> <a href="{{ url_for('profile', username=game.username) }}">{{
+                                        game.username }}</a></li>
                             </ul>
                         </div>
                     </div>
