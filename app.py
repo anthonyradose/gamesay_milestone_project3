@@ -225,6 +225,13 @@ def edit_review(review_id):
             return redirect(url_for("get_game_reviews"))
 
 
+@app.route("/delete_review/<review_id>", methods=["POST"])
+def delete_review(review_id):
+    review = mongo.db.game_reviews.find_one({"_id": ObjectId(review_id)})
+    mongo.db.game_reviews.delete_one({"_id": ObjectId(review_id)})
+    return redirect(url_for("profile", username=session.get("user")))
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
