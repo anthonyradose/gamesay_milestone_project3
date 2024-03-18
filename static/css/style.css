@@ -1,4 +1,24 @@
+
+
 .fixed-size-img {
     width: 200px;
-    height: auto; 
+    height: auto;
+}
+
+#gamepadIcon {
+    height: 1em;
+    width: auto;
+    position: relative;
+    top: -0.1em;
+}
+
+:root .navbar{
+    --bs-tertiary-bg-rgb: 224,231,34;
+    --bs-navbar-color: rgba(var(--bs-emphasis-color-rgb), 1);
+    --bs-emphasis-color-rgb: 0, 0, 0;
+  }
+
+.footer{
+    background-color: grey;
+    margin-bottom: 0;
 }
