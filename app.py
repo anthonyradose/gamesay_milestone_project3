@@ -243,6 +243,21 @@ def delete_review(review_id):
     return redirect(url_for("profile", username=session.get("user")))
 
 
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    if "user" in session:
+        mongo.db.users.delete_one({"username": session["user"]})
+
+        mongo.db.game_reviews.delete_many({"username": session["user"]})
+
+        session.pop("user")
+        flash("Your account and associated reviews have been deleted successfully.")
+        return redirect(url_for("home"))
+    else:
+        flash("You must be logged in to delete your account.")
+        return redirect(url_for("log_in"))
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
