@@ -205,7 +205,7 @@ def edit_review(review_id):
         )
 
         flash("Game review updated successfully!")
-        return redirect(url_for("get_game_reviews"))
+        return redirect(url_for("profile", username=session.get("user")))
     else:
         existing_review = mongo.db.game_reviews.find_one(
             {"_id": ObjectId(review_id)}
@@ -216,13 +216,13 @@ def edit_review(review_id):
             response = requests.get(url)
             if response.status_code == 200:
                 game_data = response.json()
-                return render_template("edit_review.html", review=existing_review, game_data=game_data)
+                return render_template("profile.html", review=existing_review, game_data=game_data)
             else:
                 flash("Error fetching game information")
-                return redirect(url_for("get_game_reviews"))
+                return redirect(url_for("profile", username=session.get("user")))
         else:
             flash("Review not found")
-            return redirect(url_for("get_game_reviews"))
+            return redirect(url_for("profile", username=session.get("user")))
 
 
 @app.route("/delete_review/<review_id>", methods=["POST"])

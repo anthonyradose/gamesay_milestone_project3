@@ -20,12 +20,49 @@
                                 <p class="card-text">Review: {{ review.review }}</p>
                                 <p class="card-text"><small class="text-muted">Rating: {{ review.rating }}</small></p>
                                 {% if current_username == username %}
-                                <a href="{{ url_for('edit_review', review_id=review._id) }}"
-                                    class="btn btn-primary">Edit</a>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#editModal_{{ review._id }}" class=" btn btn-primary">Edit</button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal_{{ review._id }}">
                                     Delete
                                 </button>
+                                <div class="modal fade" id="editModal_{{ review._id }}" tabindex="-1"
+                                    aria-labelledby="editModalLabel_{{ review._id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel_{{ review._id }}">Edit Review
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post"
+                                                    action="{{ url_for('edit_review', review_id=review._id) }}">
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Game Name</label>
+                                                        <input type="text" class="form-control" id="name" name="name"
+                                                            value="{{ review.name }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="review" class="form-label">Review</label>
+                                                        <textarea class="form-control" id="review" name="review"
+                                                            rows="4" required>{{ review.review }}</textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="rating" class="form-label">Rating (out of
+                                                            10)</label>
+                                                        <input type="number" class="form-control" id="rating"
+                                                            name="rating" value="{{ review.rating }}" min="0" max="10"
+                                                            step="0.5" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Update Review</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Delete Modal -->
                                 <div class="modal fade" id="exampleModal_{{ review._id }}" tabindex="-1"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
