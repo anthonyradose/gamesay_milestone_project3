@@ -192,7 +192,12 @@ def add_game():
 
 @app.route("/edit_review/<review_id>", methods=["GET", "POST"])
 def edit_review(review_id):
+    existing_review = mongo.db.game_reviews.find_one(
+        {"_id": ObjectId(review_id)}
+    )
     if request.method == "POST":
+        if "user" not in session or session["user"] != existing_review["username"]:
+            abort(403)
         review = request.form.get("review")
         rating = float(request.form.get("rating"))
 
@@ -203,13 +208,9 @@ def edit_review(review_id):
                 "rating": rating
             }}
         )
-
         flash("Game review updated successfully!")
         return redirect(url_for("profile", username=session.get("user")))
     else:
-        existing_review = mongo.db.game_reviews.find_one(
-            {"_id": ObjectId(review_id)}
-        )
         if existing_review:
             game_id = existing_review["game_id"]
             url = f"{RAWG_API_URL}/{game_id}?key={RAWG_API_KEY}"
@@ -228,7 +229,17 @@ def edit_review(review_id):
 @app.route("/delete_review/<review_id>", methods=["POST"])
 def delete_review(review_id):
     review = mongo.db.game_reviews.find_one({"_id": ObjectId(review_id)})
+
+    if not review:
+        flash("Review not found")
+        return redirect(url_for("profile", username=session.get("user")))
+
+    if "user" not in session or session["user"] != review["username"]:
+        abort(403)
+
     mongo.db.game_reviews.delete_one({"_id": ObjectId(review_id)})
+    flash("Review deleted successfully")
+
     return redirect(url_for("profile", username=session.get("user")))
 
 
