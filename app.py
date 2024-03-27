@@ -23,7 +23,8 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def home():
-    return render_template("base.html")
+    recent_reviews = mongo.db.game_reviews.find().sort([('_id', -1)]).limit(3)
+    return render_template("base.html", recent_reviews=recent_reviews)
 
 
 @app.route("/sign_up", methods=["GET", "POST"])

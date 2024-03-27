@@ -8,6 +8,10 @@
         type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
     {% block styles %}
     {% endblock %}
     <title>Gamesay</title>
@@ -15,9 +19,10 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{url_for('home')}}">Home</a>
+        <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+            <div class="container">
+                <a class="navbar-brand" id="homeLink" href="{{url_for('home')}}"><img id="homeIcon"
+                        src="../static/css/icons/game_pad.png"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +38,7 @@
                             <a class="nav-link" href="{{url_for('get_game_reviews')}}">Browse</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('profile', username=session['user'])}}">Profile</a>
+                            <a class="nav-link" href="{{url_for('profile', username=session['user'])}}">Profile</i></a>
                         </li>
                         <li><a class="nav-link" href="{{ url_for('log_out') }}">Log Out</a></li>
                         {% else %}
@@ -66,31 +71,49 @@
 
     <main>
         {% block content %}
-        <div class="container mt-4 min-vh-100">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card p-4">
-                        <div class="border p-4">
-                            <h1 class="display-1 text-center mb-4 fw-lighter">GA<img id="gamepadIcon"
-                                    src="../static/css/icons/game_pad.png">ESAY</h1>
-                        </div>
-                        <div class="border p-4 mt-4">
-                            <p class="lead text-center mb-0">Gamesay is a platform where you can discover, review, and
-                                share your favorite games with other users.</p>
+        <div class="container py-5 min-vh-100">
+            <div class="container justify-content-center my-5">
+                <h1 class="display-1 text-center fw-lighter">GA<img id="gamepadIcon"
+                        src="../static/css/icons/game_pad.png">ESAY</h1>
+            </div>
+            <div class="container justify-content-center p-3 my-5 col-lg-5" id="landing-intro">
+                <p class="lead text-center">Gamesay is a platform where you can discover, review,
+                    and
+                    share your favorite games with other users.</p>
+            </div>
+            <div class="container p-5 my-5">
+                <h3 class="text-center mb-4">Featured Reviews</h3>
+                <div class="row justify-content-center">
+                    {% for review in recent_reviews %}
+                    <div class=" game-card mb-5 me-lg-3 col-lg-3 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img src="{{ review.background_image }}" class="card-img-top" alt="Game Image">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ review.name }}</h5>
+                                <h5>{{review.rating}}</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('get_game_reviews', game_data=game_data) }} "
+                                            class="btn btn-sm btn-outline-secondary">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
+
+            {% endblock %}
         </div>
-        {% endblock %}
     </main>
     <footer class="footer mt-auto">
-        <div class="container-fluid p-3">
-        <p>Made by Anthony Radose</p>
-        <p>Custom icons by <a href="https://www.freepik.com/icons" target="_blank">Freepik</a></p>
-        <i class="bi bi-github"></i>
-        <i class="bi bi-linkedin"></i>
-        <i class="bi bi-instagram"></i>
+        <div class="container p-3">
+            <p>Made by Anthony Radose</p>
+            <p>Custom icons by <a href="https://www.freepik.com/icons" target="_blank">Freepik</a></p>
+            <i class="bi bi-github"></i>
+            <i class="bi bi-linkedin"></i>
+            <i class="bi bi-instagram"></i>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
