@@ -2,23 +2,39 @@
 {% block content %}
 
 <div class="container min-vh-100">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center my-5 py-5">
         <div class="col-md-8">
-            <h3 class="text-center text-primary mb-4">
-                {{ username }}'s Profile
-            </h3>
+            <div class="container justify-content-center my-5">
+                <h2 class="text-center mb-5 pb-5">{{ username }}'s Profile</h2>
+            </div>
             <div class="card-deck">
                 {% for review in user_reviews %}
                 <div class="card mb-4">
                     <div class="row no-gutters">
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <img src="{{ review.background_image }}" class="card-img" alt="{{ review.name }}">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-lg-8">
                             <div class="card-body">
                                 <h5 class="card-title">Game: {{ review.name }}</h5>
-                                <p class="card-text">Review: {{ review.review }}</p>
-                                <p class="card-text"><small class="text-muted">Rating: {{ review.rating }}</small></p>
+                                <p class="card-text d-inline"><strong>Review:</strong> {% set review_words = review.review | striptags %}
+                                    {% set word_count = review_words | length %}
+                                    {% if word_count > 50 %}
+                                    {% set visible_review = review_words[:50] %}
+                                    {% set hidden_review = review_words[50:] %}
+                                <p class="d-inline">{{ visible_review }}<span class="collapse" id="collapseReview">{{
+                                        hidden_review }}</span></p>
+                                <button class="btn" id="reviewBtn" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseReview" aria-expanded="false"
+                                    aria-controls="collapseReview">
+                                    <span class="read-more">... <i class="bi bi-caret-down-fill"></i></span>
+                                    <span class="read-less"><i class="bi bi-caret-up-fill"></i></span>
+                                </button>
+                                {% else %}
+                                <p class="d-inline">{{ review.review }}</p>
+                                {% endif %}
+                                </p>
+                                <p class="card-text"><strong>Rating:</strong><span> {{ review.rating }}</span></p>
                                 {% if current_username == username %}
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#editModal_{{ review._id }}" class=" btn btn-primary">Edit</button>
@@ -74,7 +90,7 @@
                                             <div class="modal-body">
                                                 <form method="post"
                                                     action="{{ url_for('delete_review', review_id=review._id) }}">
-                                                    <button type="submit" class="btn btn-secondary">Yes</button>
+                                                    <button type="submit" class="btn btn-primary">Yes</button>
                                                     <button type="button" class="btn btn-danger"
                                                         data-bs-dismiss="modal">No</button>
                                                 </form>
@@ -91,8 +107,7 @@
             </div>
             {% if current_username == username %}
             <!-- Delete Account Button -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                data-bs-target="#deleteAccountModal">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                 Delete Account
             </button>
 
@@ -103,8 +118,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             Are you sure you want to delete your account? This action cannot be undone.
@@ -112,8 +126,7 @@
                         <div class="modal-footer">
                             <form action="{{ url_for('delete_account') }}" method="post">
                                 <button type="submit" class="btn btn-danger">Delete</button>
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             </form>
                         </div>
                     </div>
