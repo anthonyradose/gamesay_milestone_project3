@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import math
 from flask import Flask, flash, render_template, redirect, request, session, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -89,8 +90,13 @@ def log_out():
 
 @app.route("/get_game_reviews")
 def get_game_reviews():
-    games = mongo.db.game_reviews.find()
-    return render_template("game_reviews.html", games=games)
+    page = request.args.get("page", 1, type=int)
+    per_page = 5  
+    start_index = (page - 1) * per_page
+    total_reviews = mongo.db.game_reviews.count_documents({})
+    total_pages = math.ceil(total_reviews / per_page)
+    games = mongo.db.game_reviews.find().skip(start_index).limit(per_page)
+    return render_template("game_reviews.html", games=games, per_page=per_page, total_reviews=total_reviews, total_pages=total_pages, page=page)
 
 
 @app.route("/search_game")
@@ -106,7 +112,7 @@ def search_results():
         query = request.args.get("query")
 
     page = request.args.get("page", 1, type=int)
-    per_page = 10
+    per_page = 5
 
     start_index = (page - 1) * per_page
 
@@ -119,7 +125,10 @@ def search_results():
         games = data.get("results", [])
         total_results = data.get("count", 0)
 
-        return render_template("search_results.html", games=games, total_results=total_results, per_page=per_page, page=page, query=query)
+        total_pages = math.ceil(total_results / per_page)
+
+        return render_template("search_results.html", games=games, total_results=total_results,
+                               per_page=per_page, page=page, query=query, total_pages=total_pages)
     else:
         return "Error searching for the game."
 
