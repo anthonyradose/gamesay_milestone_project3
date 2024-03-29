@@ -20,6 +20,9 @@ body {
     height: 2em;
     position: unset;
 }
+#searchIcon{
+    height: 2em;
+}
 
 #gamepadIcon {
     height: 1em;
@@ -74,6 +77,43 @@ button[aria-expanded="false"] span.read-less {
     border-top: 3px solid #00A3E1;
     color: white;
     margin-bottom: 0;
+}
+
+
+
+
+
+
+
+
+#searchBtn {
+    background-color: #00A3E1;
+    border: none;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    box-shadow: -1px 1px 0px 1px #5d748a;
+}
+
+#searchBtn:hover {
+    background-color: #0096D1;
+}
+
+#searchBtn:active {
+    background-color: #008FC7;
+    box-shadow: none;
+}
+
+
+
+
+
+
+
+
+
+@media (max-width: 576px) {
+    #searchDiv {
+        width: 75%;
+    }
 }
 
 @media (min-width: 576px) {
