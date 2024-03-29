@@ -134,13 +134,11 @@ def game_info():
     response = requests.get(url)
     if response.status_code == 200:
         game_data = response.json()
-
         response_tags = requests.get(url_tags)
         if response_tags.status_code == 200:
             tags_data = response_tags.json()
 
             game_tags = set(tag['slug'] for tag in tags_data['results'])
-
             relevant_tags = [tag['name'] for tag in game_data.get(
                 'tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
             return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
@@ -178,7 +176,7 @@ def add_game():
             "developers": developers,
             "publishers": publishers,
             "platforms": platforms,
-            "game_modes": tags,
+            "tags": tags,
             "review": review,
             "rating": rating
         }

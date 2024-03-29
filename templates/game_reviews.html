@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="text-center mb-4">Game Reviews</h2>
-<div class="container min-vh-100">
-    <div class="row">
+<div class="container min-vh-100 py-5">
+    <div class="container justify-content-center my-5">
+        <h2 class="text-center my-5 py-5">Game Reviews</h2>
+    </div>
+    <div class="row justify-content-center">
         {% for game in games %}
-        <div class="col-lg-12 mb-4">
+        <div class="col-10 col-xl-8 mb-5">
             <div class="card">
                 <div class="row no-gutters">
                     <div class="col-lg-4">
@@ -14,15 +16,88 @@
                     <div class="col-lg-8">
                         <div class="card-body">
                             <h5 class="card-title">{{ game.name }}</h5>
-                            <p class="card-text">{{ game.description | safe }}</p>
+                            <p class="card-text">
+                                {% set words = game.description | striptags %}
+                                {% set word_count = words | length %}
+                                {% if word_count > 50 %}
+                                {% set visible_text = words[:50] %}
+                                {% set hidden_text = words[50:] %}
+                                {{ visible_text }}<span class="collapse" id="collapseDescription{{ loop.index }}">{{
+                                    hidden_text }}</span>
+                                <button class="btn" id="descriptionBtn" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseDescription{{ loop.index }}" aria-expanded="false"
+                                    aria-controls="collapseDescription{{ loop.index }}">
+                                    <span class="read-more">... <i class="bi bi-caret-down-fill"></i></span>
+                                    <span class="read-less"><i class="bi bi-caret-up-fill"></i></span>
+                                </button>
+                                {% else %}
+                                {{ game.description }}
+                                {% endif %}
+                            </p>
                             <ul class="list-unstyled">
                                 <li><strong>Released:</strong> {{ game.released }}</li>
-                                <li><strong>Genres:</strong> {{ game.genres | join(", ") }}</li>
-                                <li><strong>Developers:</strong> {{ game.developers | join(", ") }}</li>
-                                <li><strong>Publishers:</strong> {{ game.publishers | join(", ") }}</li>
-                                <li><strong>Platforms:</strong> {{ game.platforms | join(", ") }}</li>
-                                <li><strong>Game-Modes:</strong> {{ game.tags | join(", ") }}</li>
-                                <li><strong>Review:</strong> {{ game.review }}</li>
+                                <li><strong>Genres:</strong> 
+                                    {% set genres = game.genres | replace(",", ", ") | replace("[", "") | replace("]", "") | replace("'", "") | trim %}
+                                    {% if genres | last == ',' %}
+                                        {{ genres[:-1] }}
+                                    {% else %}
+                                        {{ genres }}
+                                    {% endif %}
+                                </li>                               
+                                <li><strong>Developers:</strong> 
+                                    {% set developers = game.developers | replace(",", ", ") | replace("[", "") | replace("]", "") | replace("'", "") | trim %}
+                                    {% if developers | last == ',' %}
+                                        {{ developers[:-1] }}
+                                    {% else %}
+                                        {{ developers }}
+                                    {% endif %}
+                                </li>                              
+                                </li>
+                                <li><strong>Publishers:</strong>
+                                    {% set publishers = game.publishers | replace(",", ", ") | replace("[", "") |
+                                    replace("]", "") |
+                                    replace("'", "") | trim %}
+                                    {% if publishers | last == ',' %}
+                                    {{ publishers[:-1] }}
+                                    {% else %}
+                                    {{ publishers }}
+                                    {% endif %}
+                                </li>
+                                <li><strong>Platforms:</strong> 
+                                    {% set platforms = game.platforms | replace(",", ", ") | replace("[", "") | replace("]", "") | replace("'", "") | trim %}
+                                    {% if platforms | last == ',' %}
+                                        {{ platforms[:-1] }}
+                                    {% else %}
+                                        {{ platforms }}
+                                    {% endif %}
+                                </li>
+                                </li>
+                                <li><strong>Game-Modes:</strong> 
+                                    {% set game_modes = game.tags | replace(",", ", ") | replace("[", "") | replace("]", "") | replace("'", "") | trim %}
+                                    {% if game_modes | last == ',' %}
+                                        {{ game_modes[:-1] }} 
+                                    {% else %}
+                                        {{ game_modes }}
+                                    {% endif %}
+                                </li>
+                                <li><strong>Review:</strong>
+                                    {% set review_words = game.review | striptags %}
+                                    {% set word_count = review_words | length %}
+                                    {% if word_count > 50 %}
+                                    {% set visible_review = review_words[:50] %}
+                                    {% set hidden_review = review_words[50:]%}
+                                    {{ visible_review }}<span class="collapse" id="collapseReview{{ loop.index }}">{{
+                                        hidden_review }}</span>
+                                    <button class="btn" id="reviewBtn" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseReview{{ loop.index }}" aria-expanded="false"
+                                        aria-controls="collapseReview{{ loop.index }}">
+                                        <span class="read-more">... <i class="bi bi-caret-down-fill"></i></span>
+                                        <span class="read-less"><i class="bi bi-caret-up-fill"></i></span>
+                                    </button>
+                                    {% else %}
+                                    {{ game.review }}
+                                    {% endif %}
+                                </li>
                                 <li><strong>Rating:</strong> {{ game.rating }}</li>
                                 <li><strong>By:</strong> <a href="{{ url_for('profile', username=game.username) }}">{{
                                         game.username }}</a></li>
