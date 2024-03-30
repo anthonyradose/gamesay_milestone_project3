@@ -1,47 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h3 class="text-center">Log In!</h3>
-
-<div class="row min-vh-100">
-    <form class="col-md-8 offset-md-2" method="POST" action="{{ url_for('log_in') }}">
-        <div class="card">
+<div class="container min-vh-100">
+    <div class="container justify-content-center mt-5 pt-5">
+        <h2 class="text-center mt-5 pb-5 display-2">Log In</h2>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="card col-8 col-xl-6 p-3">
             <div class="card-body">
-                <!-- Username -->
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"></span>
-                        <input id="username" name="username" type="text" minlength="5" maxlength="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                <form method="POST" action="{{ url_for('log_in') }}">
+                    <!-- Username -->
+                    <div class="my-3">
+                        <label for="username" class="form-label">Username:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"></span>
+                            <input id="username" name="username" type="text" minlength="5" maxlength="15"
+                                pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                        </div>
                     </div>
-                </div>
-                <!-- Password -->
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"></span>
-                        <input id="password" name="password" type="password" minlength="5" maxlength="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                    <!-- Password -->
+                    <div class="my-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"></span>
+                            <input id="password" name="password" type="password" minlength="5" maxlength="15"
+                                pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                        </div>
                     </div>
+                    <!-- Log In Button -->
+                    <button type="submit" class="btn btn-primary btn-lg w-100 my-3">
+                        Log In
+                    </button>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-center">
+                        New Here?
+                        <a href="{{ url_for('sign_up') }}" class="text-primary">Sign Up!</a>
+                    </p>
                 </div>
-                <!-- Log In Button -->
-                <button type="submit" class="btn btn-primary btn-lg w-100">
-                    Log In
-                </button>
             </div>
         </div>
-    </form>
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <p class="text-center">
-            New Here?
-            <a href="{{ url_for('sign_up') }}" class="text-primary">Sign Up!</a>
-        </p>
     </div>
 </div>
-
-
 {% endblock %}
