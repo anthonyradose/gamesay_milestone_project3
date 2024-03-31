@@ -1,18 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Search Results</h1>
 <div class="container min-vh-100">
-    <ul>
+    <div class="container justify-content-center mt-5 pt-5">
+        <h2 class="text-center mt-5 pb-5 display-2">Search Results:</h2>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 m-md-5 justify-content-center">
         {% for game in games %}
-        <a href="{{url_for('game_info', game=game)}}">
-            <li>{{ game.name }} </li>
-            <img src="{{ game.background_image }}" class="fixed-size-img img-thumbnail rounded mb-3">
-        </a>
+        <div class="col-8 col-md-6 col-lg-4 col-xl-3 p-4">
+            <a href="{{url_for('game_info', game=game)}}" class="text-decoration-none">
+                <div class="card mb-4">
+                    <img src="{{ game.background_image }}" class="card-img-top" alt="{{ game.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ game.name }}</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
         {% endfor %}
-    </ul>
-
+    </div>
     <!-- Pagination -->
-    <nav aria-label="Page navigation">
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
         <ul class="pagination">
             {% if page > 1 %}
             <li class="page-item"><a class="page-link"
