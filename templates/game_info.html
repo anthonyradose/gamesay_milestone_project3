@@ -1,46 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container min-vh-100">
-    <div class="row">
-        <div class="col-md-6">
-            <h1>{{ game_data['name'] }}</h1>
-            <img src="{{ game_data['background_image'] }}" class="img-fluid rounded mb-3">
+    <div class="row mt-5 pt-5 justify-content-center">
+        <div class="col-lg-6">
+            <h2 class="display-2 my-3 pb-5">{{ game_data['name'] }}</h2>
+            <img src="{{ game_data['background_image'] }}" class="img-fluid ">
             <p>{{ game_data['description'] | striptags }}</p>
         </div>
-        <div class="col-md-6">
-            <h2>Game Details</h2>
+        <div class="col-lg-6">
+            <h2 class="my-5">Game Details:</h2>
             <ul class="list-group">
                 <li class="list-group-item"><strong>Released:</strong> {{ game_data['released'] }}</li>
                 <li class="list-group-item"><strong>Genres:</strong>
-                    {% for genre in game_data['genres'] %}
-                    {{ genre['name'] }},
-                    {% endfor %}
+                    {% set genres = game_data['genres'] | map(attribute='name') | join(", ") %}
+                    {{ genres }}
                 </li>
                 <li class="list-group-item"><strong>Developers:</strong>
-                    {% for developer in game_data['developers'] %}
-                    {{ developer['name'] }},
-                    {% endfor %}
+                    {% set developers = game_data['developers'] | map(attribute='name') | join(", ") %}
+                    {{ developers }}
                 </li>
                 <li class="list-group-item"><strong>Publishers:</strong>
-                    {% for publisher in game_data['publishers'] %}
-                    {{ publisher['name'] }},
-                    {% endfor %}
+                    {% set publishers = game_data['publishers'] | map(attribute='name') | join(", ") %}
+                    {{ publishers }}
                 </li>
                 <li class="list-group-item"><strong>Platforms:</strong>
-                    {% for platform in game_data['platforms'] %}
-                    {{ platform['platform']['name'] }},
-                    {% endfor %}
+                    {% set platforms = game_data['platforms'] | map(attribute='platform.name') | join(", ") %}
+                    {{ platforms }}
                 </li>
                 <li class="list-group-item"><strong>Game-Modes:</strong>
-                    {% for tag in relevant_tags %}
-                    {{ tag }},
-                    {% endfor %}
+                    {% set game_modes = relevant_tags | join(", ") %}
+                    {{ game_modes }}
                 </li>
             </ul>
         </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-md-12">
+    <div class="row my-5">
+        <div class="col-lg-8">
             <h2>Add Review:</h2>
             <form action="/add_game" method="post">
                 <input type="hidden" name="game_id" value="{{ game_data['id'] }}">
@@ -48,15 +43,14 @@
                 <input type="hidden" name="background_image" value="{{ game_data['background_image'] }}">
                 <input type="hidden" name="description" value="{{ game_data['description'] }}">
                 <input type="hidden" name="released" value="{{ game_data['released'] }}">
-                <input type="hidden" name="genres"
-                    value="{% for genre in game_data['genres'] %}{{ genre['name'] }},{% endfor %}">
+                <input type="hidden" name="genres" value="{{ game_data['genres'] | map(attribute='name') | join(", ") }}">
                 <input type="hidden" name="developers"
-                    value="{% for developer in game_data['developers'] %}{{ developer['name'] }},{% endfor %}">
+                    value="{{ game_data['developers'] | map(attribute='name') | join(", ") }}">
                 <input type="hidden" name="publishers"
-                    value="{% for publisher in game_data['publishers'] %}{{ publisher['name'] }},{% endfor %}">
+                    value="{{ game_data['publishers'] | map(attribute='name') | join(", ") }}">
                 <input type="hidden" name="platforms"
-                    value="{% for platform in game_data['platforms'] %}{{ platform['platform']['name'] }},{% endfor %}">
-                <input type="hidden" name="tags" value="{% for tag in relevant_tags %}{{ tag }},{% endfor %}">
+                    value="{{ game_data['platforms'] | map(attribute='platform.name') | join(", ") }}">
+                <input type="hidden" name="tags" value="{{ relevant_tags | join(", ") }}">
                 <div class="mb-3">
                     <label for="review" class="form-label">Review:</label>
                     <textarea class="form-control" id="review" name="review" rows="4" cols="50" required></textarea>

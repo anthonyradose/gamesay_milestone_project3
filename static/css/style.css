@@ -62,6 +62,17 @@ body {
     box-shadow: none;
 }
 
+.img-fluid{
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+.img-fluid + p{
+    background: white;
+    padding: 1rem;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
 #landing-intro {
     width: 80%;
 }
