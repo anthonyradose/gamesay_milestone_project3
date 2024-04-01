@@ -266,7 +266,7 @@ def delete_account():
 
         session.pop("user")
         flash("Your account and associated reviews have been deleted successfully.")
-        return redirect(url_for("home"))
+        return redirect(url_for("sign_up"))
     else:
         flash("You must be logged in to delete your account.")
         return redirect(url_for("log_in"))
