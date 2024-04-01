@@ -43,14 +43,15 @@
                 <input type="hidden" name="background_image" value="{{ game_data['background_image'] }}">
                 <input type="hidden" name="description" value="{{ game_data['description'] }}">
                 <input type="hidden" name="released" value="{{ game_data['released'] }}">
-                <input type="hidden" name="genres" value="{{ game_data['genres'] | map(attribute='name') | join(", ") }}">
+                <input type="hidden" name="genres" value="{{ game_data['genres'] | map(attribute='name') | join("
+                    , ") }}">
                 <input type="hidden" name="developers"
-                    value="{{ game_data['developers'] | map(attribute='name') | join(", ") }}">
+                    value="{{ game_data['developers'] | map(attribute='name') | join(" , ") }}">
                 <input type="hidden" name="publishers"
-                    value="{{ game_data['publishers'] | map(attribute='name') | join(", ") }}">
+                    value="{{ game_data['publishers'] | map(attribute='name') | join(" , ") }}">
                 <input type="hidden" name="platforms"
-                    value="{{ game_data['platforms'] | map(attribute='platform.name') | join(", ") }}">
-                <input type="hidden" name="tags" value="{{ relevant_tags | join(", ") }}">
+                    value="{{ game_data['platforms'] | map(attribute='platform.name') | join(" , ") }}">
+                <input type="hidden" name="tags" value="{{ relevant_tags | join(" , ") }}">
                 <div class="mb-3">
                     <label for="review" class="form-label">Review:</label>
                     <textarea class="form-control" id="review" name="review" rows="4" cols="50" required></textarea>
@@ -58,8 +59,9 @@
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating (out of 10):</label>
                     <select class="form-select" id="rating" name="rating" required>
-                        {% for i in range(-1, 21) %}
-                        <option value="{{ i / 2 }}">{% if i == -1 %}No rating{% else %}{{ i / 2 }}{% endif %}</option>
+                        <option value="">No rating</option>
+                        {% for i in range(0, 21) %}
+                        <option value="{{ i / 2 }}">{{ i / 2 }}</option>
                         {% endfor %}
                     </select>
                 </div>

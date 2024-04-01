@@ -81,20 +81,33 @@
                     and
                     share your favorite games with other users.</p>
             </div>
-            <div class="container p-5 my-5">
+            <div class="container p-5 pt-lg-0 my-5">
                 <h3 class="text-center mb-4">Featured Reviews</h3>
                 <div class="row justify-content-center">
                     {% for review in recent_reviews %}
-                    <div class=" game-card mb-5 me-lg-3 col-lg-3 col-xl-3">
+                    <div class=" game-card mb-5 me-lg-4 col-lg-3 col-xl-3">
                         <div class="card h-100 border-0 shadow-sm">
                             <img src="{{ review.background_image }}" class="card-img-top" alt="Game Image">
                             <div class="card-body">
-                                <h5 class="card-title">{{ review.name }}</h5>
-                                <h5>{{review.rating}}</h5>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a href="{{ url_for('get_game_reviews', game_data=game_data) }} "
-                                            class="btn btn-sm btn-outline-secondary">View Details</a>
+                                <div class="container h-25">
+                                    <h5 class="card-title">{{ review.name }}</h5>
+                                </div>
+                                <hr>
+                                <div class="container">
+                                    <div class="container d-flex justify-content-center rounded my-3 py-3 m-0 rating {% if review.rating >= 0 and review.rating <= 4.5 %}
+                                    bg-danger
+                                {% elif review.rating > 4.5 and review.rating <= 7.5 %}
+                                    bg-warning
+                                {% else %}
+                                    bg-success
+                                {% endif %}">
+                                        <h5>{{review.rating}}</h5>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-5 mb-lg-0">
+                                        <div class="btn-group">
+                                            <a href="{{ url_for('get_game_reviews', game_data=game_data) }} "
+                                                class="btn btn-primary">View Details</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
