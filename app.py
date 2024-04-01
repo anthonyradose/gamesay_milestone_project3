@@ -77,8 +77,14 @@ def log_in():
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
     current_username = session.get("user")
-    user_reviews = mongo.db.game_reviews.find({"username": username})
-    return render_template("profile.html", username=username, current_username=current_username, user_reviews=user_reviews)
+    page = request.args.get("page", 1, type=int)
+    per_page = 5  
+    start_index = (page - 1) * per_page
+    user_reviews = mongo.db.game_reviews.find({"username": username}).skip(start_index).limit(per_page)
+    total_reviews = mongo.db.game_reviews.count_documents({"username": username})
+    total_pages = math.ceil(total_reviews / per_page)
+    return render_template("profile.html", username=username, current_username=current_username, user_reviews=user_reviews, per_page=per_page, total_reviews=total_reviews, total_pages=total_pages, page=page)
+
 
 
 @app.route("/log_out")

@@ -18,7 +18,8 @@
                         <div class="col-lg-8">
                             <div class="card-body">
                                 <h5 class="card-title">Game: {{ review.name }}</h5>
-                                <p class="card-text d-inline"><strong>Review:</strong> {% set review_words = review.review | striptags %}
+                                <p class="card-text d-inline"><strong>Review:</strong> {% set review_words =
+                                    review.review | striptags %}
                                     {% set word_count = review_words | length %}
                                     {% if word_count > 50 %}
                                     {% set visible_review = review_words[:50] %}
@@ -106,6 +107,30 @@
                 </div>
                 {% endfor %}
             </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page > 1 %}
+                    <li class="page-item"><a class="page-link"
+                            href="{{ url_for('profile', username=username, page=1) }}">First</a></li>
+                    <li class="page-item"><a class="page-link"
+                            href="{{ url_for('profile', username=username, page=page - 1) }}">Previous</a></li>
+                    {% endif %}
+                    {% for p in range(1, total_pages + 1) %}
+                    {% if p >= page - 5 and p <= page + 5 %} <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('profile', username=username, page=p) }}">{{ p }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page < total_pages %} <li class="page-item"><a class="page-link"
+                                href="{{ url_for('profile', username=username, page=page + 1) }}">Next</a></li>
+                            <li class="page-item"><a class="page-link"
+                                    href="{{ url_for('profile', username=username, page=total_pages) }}">Last</a></li>
+                            {% endif %}
+                </ul>
+            </nav>
+
             {% if current_username == username %}
             <!-- Delete Account Button -->
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
