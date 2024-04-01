@@ -4,7 +4,12 @@ body {
     background-image: linear-gradient(to bottom, #ffffff 70%, #8C92AC 30%);
     background-attachment: fixed;
 }
-
+section{
+    position: fixed;
+    width: 100%;
+    padding-top: 0.75rem;
+    z-index: 3;
+}
 .footer-icon:hover{
     color: #00A3E1;
 }
