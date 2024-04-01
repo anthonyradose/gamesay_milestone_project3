@@ -32,10 +32,13 @@ body {
     top: -0.1em;
 }
 
-#penIcon, #loginIcon {
+#penIcon,
+#loginIcon {
     height: 4em;
 }
-#usernameIcon, #passwordIcon{
+
+#usernameIcon,
+#passwordIcon {
     height: 2em;
 }
 
@@ -116,6 +119,10 @@ body {
     border: none;
 }
 
+.card-img-top {
+    height: 200px;
+}
+
 #descriptionBtn,
 #reviewBtn {
     margin: 0;
@@ -143,6 +150,12 @@ button[aria-expanded="false"] span.read-less {
 }
 
 /*Media Queries:*/
+@media (min-width: 440px) {
+    .card-img-top {
+        height: 300px;
+    }
+}
+
 @media (max-width: 576px) {
     #searchDiv {
         width: 75%;
@@ -152,6 +165,10 @@ button[aria-expanded="false"] span.read-less {
 @media (min-width: 576px) {
     #landing-intro {
         width: 83%;
+    }
+
+    .card-img-top {
+        height: 200px;
     }
 }
 
@@ -164,8 +181,13 @@ button[aria-expanded="false"] span.read-less {
         width: 15%;
     }
 
-    #penIcon, #loginIcon {
+    #penIcon,
+    #loginIcon {
         height: 5em;
+    }
+
+    .card-img-top {
+        height: 250px;
     }
 }
 
