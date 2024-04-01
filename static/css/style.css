@@ -5,7 +5,9 @@ body {
     background-attachment: fixed;
 }
 
-
+.footer-icon:hover{
+    color: #00A3E1;
+}
 .fixed-size-img {
     width: 200px;
     height: auto;
