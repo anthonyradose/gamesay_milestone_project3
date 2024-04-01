@@ -34,7 +34,7 @@ body {
 
 #penIcon,
 #loginIcon,
-#gameboyIcon, #likeIcon {
+#gameboyIcon, #likeIcon, #profileIcon {
     height: 4em;
 }
 
@@ -183,7 +183,7 @@ button[aria-expanded="false"] span.read-less {
     }
 
     #penIcon,
-    #loginIcon, #gameboyIcon, #likeIcon {
+    #loginIcon, #gameboyIcon, #likeIcon, #profileIcon {
         height: 5em;
     }
 

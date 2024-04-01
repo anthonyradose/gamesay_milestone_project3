@@ -4,8 +4,9 @@
 <div class="container min-vh-100">
     <div class="row justify-content-center my-5 py-5">
         <div class="col-md-8">
-            <div class="container justify-content-center my-5">
-                <h2 class=" display-2 text-center mb-5 pb-5">{{ username }}'s Profile</h2>
+            <div class="container d-flex align-items-center justify-content-center my-5 pb-5">
+                <img class="'d-inline me-3" id="profileIcon" src="../static/css/icons/profile.png">
+                <h2 class=" display-2 text-center">{{ username }}</h2>
             </div>
             <div class="card-deck">
                 {% for review in user_reviews %}
