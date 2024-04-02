@@ -168,7 +168,8 @@ def handle_search_results(query, page, per_page):
     """
     start_index = (page - 1) * per_page
 
-    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}&page_size={per_page}&page={page}"
+    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={
+        query}&page_size={per_page}&page={page}"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -194,15 +195,16 @@ def search_results():
     page = request.args.get("page", 1, type=int)
     per_page = 5
 
-    games, total_results, total_pages = handle_search_results(query, page, per_page)
+    games, total_results, total_pages = handle_search_results(
+        query, page, per_page)
 
     return render_template("search_results.html",
-                               games=games,
-                               total_results=total_results,
-                               per_page=per_page,
-                               page=page,
-                               query=query,
-                               total_pages=total_pages)
+                           games=games,
+                           total_results=total_results,
+                           per_page=per_page,
+                           page=page,
+                           query=query,
+                           total_pages=total_pages)
 
 
 @app.route("/game_info")

@@ -235,11 +235,28 @@ No errors were found.
 
 ![PythonValidation](https://live.staticflickr.com/65535/53626609727_756ee0e3d0_b.jpg)
 
-**Usability Testing:**
-.
+## Usability Testing: ##
 
-**Responsiveness Testing:**
-.
+### User Interface Clarity and Intuitiveness
+
+| Test Case                  | Expected Result                                              | Outcome |
+|----------------------------|--------------------------------------------------------------|---------|
+| Locate and use main features/buttons (e.g., "Add," "Browse")     | Features/buttons should be easily visible and usable.        | Pass        |
+| Evaluate the clarity of labels and instructions                     | Labels and instructions should be clear and understandable.   |  Pass       |
+| Test the consistency of design elements (color scheme, fonts, layouts) | Design elements should be consistent throughout the application. | Pass        |
+
+### Accessibility Testing
+
+| Test Case                  | Expected Result                                              | Outcome |
+|----------------------------|--------------------------------------------------------------|---------|
+| Evaluate contrast and color schemes for readability and accessibility | Colors and contrasts should be chosen to ensure readability for users with visual impairments. | Pass        |
+
+## Responsiveness Testing: ##
+
+| Test Case                  | Expected Result                                              | Outcome |
+|----------------------------|--------------------------------------------------------------|---------|
+| Tested the application on various devices and screen sizes to ensure a consistent and user-friendly experience. | Pass        |
+
 
 ---
 

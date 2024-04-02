@@ -78,12 +78,14 @@ button[aria-expanded="false"] span.read-less {
 }
 
 .btn-danger {
-    background-color: #EB212E;
-    --bs-btn-hover-bg: #E91624;
-    --bs-btn-active-bg: #E01522;
+    color: black;
+    background-color: #f4364c;
+    --bs-btn-hover-bg: #F4253D;
+    --bs-btn-active-bg: #F31B34;
 }
 
 .btn-primary {
+    color: black;
     background-color: #00A3E1;
     --bs-btn-hover-bg: #0096D1;
     --bs-btn-active-bg: #008FC7;
@@ -102,7 +104,7 @@ button[aria-expanded="false"] span.read-less {
 }
 
 .bg-danger {
-    --bs-danger-rgb: 235, 33, 46
+    --bs-danger-rgb: 244, 54, 76
 }
 
 .bg-success {
@@ -142,6 +144,9 @@ button[aria-expanded="false"] span.read-less {
 #reviewBtn {
     margin: 0;
     padding: 0;
+}
+#searchBtn{
+    color: white;
 }
 
 /* Class Styles */
