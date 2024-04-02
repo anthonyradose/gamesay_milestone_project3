@@ -263,7 +263,7 @@ No errors were found.
 |------------------------------|---------------------------------------------------|---------|
 | Fill out game details form   | Form should be submitted successfully and game should be added | Pass    |
 | Submit empty form            | Form submission should be prevented and relevant error messages displayed | Pass    |
-| Add duplicate game           | Attempt to add a game with existing name should be prevented and appropriate error message displayed |     |
+| Add duplicate game           | Attempt to add a game with existing name should be prevented and appropriate error message displayed | Pass     |
 
 ### Browse Games Functionality
 

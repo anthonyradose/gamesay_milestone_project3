@@ -230,6 +230,15 @@ def add_game():
     if request.method == "POST":
         username = session.get("user")
         game_id = request.form.get("game_id")
+        # Check if the user has already reviewed the game
+        existing_review = mongo.db.game_reviews.find_one(
+            {"username": username, "game_id": game_id}
+        )
+        if existing_review:
+            flash("You have already reviewed this game.")
+            return redirect(url_for("profile", username=username))
+
+        # If user hasn't reviewed the game, proceed with adding the review
         name = request.form.get("name")
         background_image = request.form.get("background_image")
         description = request.form.get("description")
