@@ -126,17 +126,26 @@ def log_out():
     return redirect(url_for("log_in"))
 
 
-@app.route("/get_game_reviews")
-def get_game_reviews():
+def fetch_game_reviews(page, per_page):
     """
-    Fetch game reviews from the database
+    Fetch game reviews from database
     """
-    page = request.args.get("page", 1, type=int)
-    per_page = 5
     start_index = (page - 1) * per_page
     total_reviews = mongo.db.game_reviews.count_documents({})
     total_pages = math.ceil(total_reviews / per_page)
     games = mongo.db.game_reviews.find().skip(start_index).limit(per_page)
+    return games, total_reviews, total_pages
+
+
+@app.route("/get_game_reviews")
+def get_game_reviews():
+    """
+    Render game reviews from database
+    """
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+    games, total_reviews, total_pages = fetch_game_reviews(page, per_page)
+
     return render_template("game_reviews.html",
                            games=games,
                            per_page=per_page,
