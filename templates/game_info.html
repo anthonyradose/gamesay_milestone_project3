@@ -57,15 +57,14 @@
                 <input type="hidden" name="background_image" value="{{ game_data['background_image'] }}">
                 <input type="hidden" name="description" value="{{ game_data['description'] }}">
                 <input type="hidden" name="released" value="{{ game_data['released'] }}">
-                <input type="hidden" name="genres" value="{{ game_data['genres'] | map(attribute='name') | join('
-                    , ') }}">
+                <input type="hidden" name="genres" value="{{ game_data['genres'] | map(attribute='name') | join(', ') }}">
                 <input type="hidden" name="developers"
-                    value="{{ game_data['developers'] | map(attribute='name') | join(' , ') }}">
+                    value="{{ game_data['developers'] | map(attribute='name') | join(', ') }}">
                 <input type="hidden" name="publishers"
-                    value="{{ game_data['publishers'] | map(attribute='name') | join(' , ') }}">
+                    value="{{ game_data['publishers'] | map(attribute='name') | join(', ') }}">
                 <input type="hidden" name="platforms"
-                    value="{{ game_data['platforms'] | map(attribute='platform.name') | join(' , ') }}">
-                <input type="hidden" name="tags" value="{{ relevant_tags | join(' , ') }}">
+                    value="{{ game_data['platforms'] | map(attribute='platform.name') | join(', ') }}">
+                <input type="hidden" name="tags" value="{{ relevant_tags | join(', ') }}">
                 <!-- Review Textarea -->
                 <div class="mb-3">
                     <label for="review" class="form-label">Review:</label>
