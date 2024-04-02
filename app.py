@@ -162,12 +162,30 @@ def search_game():
     return render_template("search_game.html")
 
 
+def handle_search_results(query, page, per_page):
+    """
+    Handle search results retrieval from the RAWG API
+    """
+    start_index = (page - 1) * per_page
+
+    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}&page_size={per_page}&page={page}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        games = data.get("results", [])
+        total_results = data.get("count", 0)
+        total_pages = math.ceil(total_results / per_page)
+        return games, total_results, total_pages
+    else:
+        return "Error searching for the game."
+
+
 @app.route("/search_results", methods=["GET", "POST"])
 def search_results():
     """
     Render search game results
     """
-    # Handling game search
     if request.method == "POST":
         query = request.form.get("query")
     else:
@@ -176,29 +194,15 @@ def search_results():
     page = request.args.get("page", 1, type=int)
     per_page = 5
 
-    start_index = (page - 1) * per_page
+    games, total_results, total_pages = handle_search_results(query, page, per_page)
 
-    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={
-        query}&page_size={per_page}&page={page}"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        games = data.get("results", [])
-        total_results = data.get("count", 0)
-
-        total_pages = math.ceil(total_results / per_page)
-
-        return render_template("search_results.html",
+    return render_template("search_results.html",
                                games=games,
                                total_results=total_results,
                                per_page=per_page,
                                page=page,
                                query=query,
                                total_pages=total_pages)
-
-    else:
-        return "Error searching for the game."
 
 
 @app.route("/game_info")
