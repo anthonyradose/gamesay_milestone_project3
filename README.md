@@ -229,11 +229,11 @@ No errors were found.
 
 ![JSValidation](https://live.staticflickr.com/65535/53627004771_20f0009ce2_b.jpg)
 
-### PYTHON Validation
+### Python Validation
 
-.
+No errors were found.
 
-![]()
+![PythonValidation](https://live.staticflickr.com/65535/53626609727_756ee0e3d0_b.jpg)
 
 **Usability Testing:**
 .
