@@ -213,9 +213,9 @@ The sign-up page provides a straightforward form where users can input their des
 
 ### HTML Validation
 
-.
+The only errors found in the templates were seemingly from the HTML Validator's inability to recognize Jinja Templating:
 
-![HTMLValidation]()
+![HTMLValidation](https://live.staticflickr.com/65535/53626872027_d9843c231d_z.jpg) ![](https://live.staticflickr.com/65535/53628105814_4cb17a4c60_z.jpg) ![](https://live.staticflickr.com/65535/53626884062_94ef21cf39_z.jpg)
 
 ### CSS Validation
 

@@ -47,7 +47,7 @@
                                 <!-- Edit and Delete Buttons (visible to user) -->
                                 {% if current_username == username %}
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#editModal_{{ review._id }}" class=" btn btn-primary">Edit</button>
+                                    data-bs-target="#editModal_{{ review._id }}">Edit</button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal_{{ review._id }}">
                                     Delete
@@ -68,9 +68,7 @@
                                                 <form method="post"
                                                     action="{{ url_for('edit_review', review_id=review._id) }}">
                                                     <div class="mb-3">
-                                                        <label for="name" class="form-label">Game Name</label>
-                                                        <input type="text" class="form-control" id="name" name="name"
-                                                            value="{{ review.name }}" required>
+                                                        <h5 class="card-title">Game: {{ review.name }}</h5>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="review" class="form-label">Review</label>
