@@ -76,7 +76,7 @@
                 <h1 class="display-1 text-center fw-lighter">GA<img id="gamepadIcon"
                         src="../static/css/icons/game_pad.png">ESAY</h1>
             </div>
-            <div class="container justify-content-center p-3 my-5 col-lg-5" id="landing-intro">
+            <div class="container justify-content-center p-3 my-5 col-lg-5" id="landingIntro">
                 <p class="lead text-center">Gamesay is a platform where you can discover, review,
                     and
                     share your favorite games with other users.</p>
@@ -85,7 +85,7 @@
                 <h3 class="text-center mb-4">Featured Reviews</h3>
                 <div class="row justify-content-center">
                     {% for review in recent_reviews %}
-                    <div class=" game-card mb-5 me-lg-4 col-sm-10 col-md-8 col-lg-4">
+                    <div class=" gameCard mb-5 me-lg-4 col-sm-10 col-md-8 col-lg-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <img src="{{ review.background_image }}" class="card-img-top" alt="Game Image">
                             <div class="card-body">
@@ -94,7 +94,7 @@
                                 </div>
                                 <hr>
                                 <div class="container">
-                                    <div class="container d-flex justify-content-center rounded my-3 p-4 py-3 m-0 rating {% if review.rating >= 0 and review.rating <= 4.5 %}
+                                    <div class="container d-flex justify-content-center rounded my-3 p-4 py-3 m-0 ratingDiv {% if review.rating >= 0 and review.rating <= 4.5 %}
                                     bg-danger
                                 {% elif review.rating > 4.5 and review.rating <= 7.5 %}
                                     bg-warning
@@ -126,13 +126,13 @@
             <p>Made by Anthony Radose</p>
             <ul class="navbar-nav ms-auto mb-2 d-flex flex-row">
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="https://github.com/anthonyradose" target="_blank"><i class="bi bi-github footer-icon"></i></a>
+                    <a class="nav-link" href="https://github.com/anthonyradose" target="_blank"><i class="bi bi-github footerIcon"></i></a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="https://www.linkedin.com/in/anthony-radose-35a969236" target="_blank"><i class="bi bi-linkedin footer-icon"></i></a>
+                    <a class="nav-link" href="https://www.linkedin.com/in/anthony-radose-35a969236" target="_blank"><i class="bi bi-linkedin footerIcon"></i></a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="https://www.instagram.com/asradose" target="_blank"><i class="bi bi-instagram footer-icon"></i></a>
+                    <a class="nav-link" href="https://www.instagram.com/asradose" target="_blank"><i class="bi bi-instagram footerIcon"></i></a>
                 </li>
             </ul>
         </div>
