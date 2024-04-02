@@ -1,35 +1,49 @@
-import os
+import os  # Importing necessary modules
 import json
 import requests
 import math
-from flask import Flask, flash, render_template, redirect, request, session, url_for
+from flask import (Flask, flash, render_template, redirect,
+                   request, session, url_for)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-if os.path.exists("env.py"):
+
+if os.path.exists("env.py"):  # Check if environment file exists
     import env
 
 
-app = Flask(__name__)
+app = Flask(__name__)  # Initialize Flask app
 
+# Fetching API key and base URL from environment variables
 RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
 RAWG_API_URL = "https://api.rawg.io/api/games"
 
+# Setting up MongoDB connection
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+
+# Secret key for session management
 app.secret_key = os.environ.get("SECRET_KEY")
 
+# Initialize PyMongo
 mongo = PyMongo(app)
 
 
 @app.route("/")
 def home():
+    """
+    Fetches recent reviews and renders home page
+    """
     recent_reviews = mongo.db.game_reviews.find().sort([('_id', -1)]).limit(3)
     return render_template("base.html", recent_reviews=recent_reviews)
 
 
 @app.route("/sign_up", methods=["GET", "POST"])
 def sign_up():
+    """
+    User registration and redirection to profile page
+    """
+    # Handling user sign up process
     if request.method == "POST":
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
@@ -52,6 +66,10 @@ def sign_up():
 
 @app.route("/log_in", methods=["GET", "POST"])
 def log_in():
+    """
+    User authentication and redirection to profile page
+    """
+    # Handling user log in process
     if request.method == "POST":
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
@@ -76,19 +94,33 @@ def log_in():
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
+    """
+    Display user profile and associated reviews
+    """
     current_username = session.get("user")
     page = request.args.get("page", 1, type=int)
-    per_page = 5  
+    per_page = 5
     start_index = (page - 1) * per_page
-    user_reviews = mongo.db.game_reviews.find({"username": username}).skip(start_index).limit(per_page)
-    total_reviews = mongo.db.game_reviews.count_documents({"username": username})
+    user_reviews = mongo.db.game_reviews.find(
+        {"username": username}).skip(start_index).limit(per_page)
+    total_reviews = mongo.db.game_reviews.count_documents(
+        {"username": username})
     total_pages = math.ceil(total_reviews / per_page)
-    return render_template("profile.html", username=username, current_username=current_username, user_reviews=user_reviews, per_page=per_page, total_reviews=total_reviews, total_pages=total_pages, page=page)
-
+    return render_template("profile.html",
+                           username=username,
+                           current_username=current_username,
+                           user_reviews=user_reviews,
+                           per_page=per_page,
+                           total_reviews=total_reviews,
+                           total_pages=total_pages,
+                           page=page)
 
 
 @app.route("/log_out")
 def log_out():
+    """
+    Log out user and redirect to log in page
+    """
     flash("You've been logged out")
     session.pop("user")
     return redirect(url_for("log_in"))
@@ -96,22 +128,37 @@ def log_out():
 
 @app.route("/get_game_reviews")
 def get_game_reviews():
+    """
+    Fetch game reviews from the database
+    """
     page = request.args.get("page", 1, type=int)
-    per_page = 5  
+    per_page = 5
     start_index = (page - 1) * per_page
     total_reviews = mongo.db.game_reviews.count_documents({})
     total_pages = math.ceil(total_reviews / per_page)
     games = mongo.db.game_reviews.find().skip(start_index).limit(per_page)
-    return render_template("game_reviews.html", games=games, per_page=per_page, total_reviews=total_reviews, total_pages=total_pages, page=page)
+    return render_template("game_reviews.html",
+                           games=games,
+                           per_page=per_page,
+                           total_reviews=total_reviews,
+                           total_pages=total_pages,
+                           page=page)
 
 
 @app.route("/search_game")
 def search_game():
+    """
+    Render the search game page
+    """
     return render_template("search_game.html")
 
 
 @app.route("/search_results", methods=["GET", "POST"])
 def search_results():
+    """
+    Render search game results
+    """
+    # Handling game search
     if request.method == "POST":
         query = request.form.get("query")
     else:
@@ -133,14 +180,23 @@ def search_results():
 
         total_pages = math.ceil(total_results / per_page)
 
-        return render_template("search_results.html", games=games, total_results=total_results,
-                               per_page=per_page, page=page, query=query, total_pages=total_pages)
+        return render_template("search_results.html",
+                               games=games,
+                               total_results=total_results,
+                               per_page=per_page,
+                               page=page,
+                               query=query,
+                               total_pages=total_pages)
+
     else:
         return "Error searching for the game."
 
 
 @app.route("/game_info")
 def game_info():
+    """
+    Fetch detailed information about a specific game
+    """
     game = request.args.get("game")
     game_dict = eval(game)
     url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
@@ -154,9 +210,12 @@ def game_info():
             tags_data = response_tags.json()
 
             game_tags = set(tag['slug'] for tag in tags_data['results'])
-            relevant_tags = [tag['name'] for tag in game_data.get(
-                'tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug']]
-            return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
+            relevant_tags = [tag['name'] for tag in game_data.get('tags', [])
+                             if 'singleplayer' in tag['slug'] or 'multiplayer'
+                             in tag['slug']]
+            return render_template("game_info.html",
+                                   game_data=game_data,
+                                   relevant_tags=relevant_tags)
         else:
             return f"Error fetching tags: {response_tags.status_code}"
     else:
@@ -165,6 +224,9 @@ def game_info():
 
 @app.route("/add_game", methods=["POST"])
 def add_game():
+    """
+    Add a game review
+    """
     if request.method == "POST":
         username = session.get("user")
         game_id = request.form.get("game_id")
@@ -206,11 +268,15 @@ def add_game():
 
 @app.route("/edit_review/<review_id>", methods=["GET", "POST"])
 def edit_review(review_id):
+    """
+    Edit a game review
+    """
     existing_review = mongo.db.game_reviews.find_one(
         {"_id": ObjectId(review_id)}
     )
     if request.method == "POST":
-        if "user" not in session or session["user"] != existing_review["username"]:
+        if "user" not in session or \
+                session["user"] != existing_review["username"]:
             abort(403)
         review = request.form.get("review")
         rating = float(request.form.get("rating"))
@@ -231,10 +297,12 @@ def edit_review(review_id):
             response = requests.get(url)
             if response.status_code == 200:
                 game_data = response.json()
-                return render_template("profile.html", review=existing_review, game_data=game_data)
+                return render_template("profile.html", review=existing_review,
+                                       game_data=game_data)
             else:
                 flash("Error fetching game information")
-                return redirect(url_for("profile", username=session.get("user")))
+                return redirect(url_for("profile",
+                                        username=session.get("user")))
         else:
             flash("Review not found")
             return redirect(url_for("profile", username=session.get("user")))
@@ -242,6 +310,9 @@ def edit_review(review_id):
 
 @app.route("/delete_review/<review_id>", methods=["POST"])
 def delete_review(review_id):
+    """
+    Delete a game review
+    """
     review = mongo.db.game_reviews.find_one({"_id": ObjectId(review_id)})
 
     if not review:
@@ -259,13 +330,17 @@ def delete_review(review_id):
 
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
+    """
+    Delete user account and associated reviews
+    """
     if "user" in session:
         mongo.db.users.delete_one({"username": session["user"]})
 
         mongo.db.game_reviews.delete_many({"username": session["user"]})
 
         session.pop("user")
-        flash("Your account and associated reviews have been deleted successfully.")
+        flash("Your account and associated reviews have been deleted "
+              "successfully.")
         return redirect(url_for("sign_up"))
     else:
         flash("You must be logged in to delete your account.")
