@@ -2,15 +2,21 @@
 {% block content %}
 <div class="container min-vh-100">
     <div class="container d-flex align-items-center justify-content-center my-5 pt-5">
+        <!-- Gameboy Icon -->
         <img class="'d-inline me-3" id="gameboyIcon" src="../static/css/icons/gameboy.png">
+        <!-- Page heading -->
         <h2 class="display-2 text-center my-5 py-5">Search Game</h2>
     </div>
+    <!-- Search Form Section -->
     <div class="row justify-content-center m-auto" id="searchDiv">
         <div class="col-md-6 p-0">
+            <!-- Search Form -->
             <form action="/search_results" method="post" class="text-center">
                 <div class="input-group">
+                    <!-- Search Input -->
                     <input type="text" class="form-control" name="query" placeholder="Enter game name">
                     <div class="input-group-append">
+                        <!-- Search Button -->
                         <button class="btn btn-primary" id="searchBtn" type="submit" aria-label="Search"> <i class="bi bi-search fs-3"></i></button>
                     </div>
                 </div>
