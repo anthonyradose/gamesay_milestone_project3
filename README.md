@@ -81,27 +81,35 @@ The site's wireframes were made with balsalmiq wireframes.
 
 | Home Page:                  |     |
 | --------------------------- | --- |
-| ![Home Page]() |     |
+| ![Home Page](https://live.staticflickr.com/65535/53627339159_fb88714f31_b.jpg) |     |
+
+| Sign Up Page:               |     |
+| ------------------------ | --- |
+| ![Sign Up Page](https://live.staticflickr.com/65535/53627208918_c2544f1cc7_b.jpg) |     |
 
 | Login Page:               |     |
-| ------------------------ | --- |
-| ![Login Page]() |     |
-
-| Sign up Page:               |     |
 | ------------------------------- | --- |
-| ![Sign Up Page]() |     |
+| ![Login Page](https://live.staticflickr.com/65535/53627208903_554d9cb9ac_b.jpg) |     |
 
 | Add Review Page:             |     |
 | --------------------- | --- |
-| ![Add Review Page]() |     |
+| ![Add Review Page](https://live.staticflickr.com/65535/53626115127_72bebb6e05_b.jpg) |     |
 
 | Browse Reviews Page:                |     |
 | ------------------------- | --- |
-| ![Browse Page]() |     |
+| ![Browse Page](https://live.staticflickr.com/65535/53627208893_002ef1d728_b.jpg) |     |
 
 | Profile Page:               |     |
 | ---------------------- | --- |
-| ![Profile Page]() |     |
+| ![Profile Page](https://live.staticflickr.com/65535/53627339099_2c99260236_b.jpg) |     |
+
+| Search Game Page:               |     |
+| ---------------------- | --- |
+| ![Search Game Page](https://live.staticflickr.com/65535/53627208888_655478410c_b.jpg) |     |
+
+| Search Results Page:               |     |
+| ---------------------- | --- |
+| ![Search Results Page](https://live.staticflickr.com/65535/53626115122_3276843fc8_b.jpg) |     |
 
 ---
 
