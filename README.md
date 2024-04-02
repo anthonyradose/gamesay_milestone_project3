@@ -31,31 +31,31 @@ Many video game sites often overwhelm users with an abundance of content, includ
 
 1. As a user, I want to be able to browse a variety of game reviews to discover new games.
 
-![]()
+![](https://live.staticflickr.com/65535/53627735723_478111bea3_z.jpg) ![](https://live.staticflickr.com/65535/53627865209_4b3cf5022f_z.jpg)
 
-2. As a user, I want to be able to search for specific games to read reviews about them.
+2. As a user, I want to be able to search for specific games.
 
-![]()
+![](https://live.staticflickr.com/65535/53627536036_196203b983_z.jpg) ![](https://live.staticflickr.com/65535/53627536091_c967500d93_z.jpg)
 
-3. As a user, I want to be able to view detailed information about each game, including screenshots and release date..
+3. As a user, I want to be able to view detailed information about each game, including screenshots and release date.
 
-![]()
+![](https://live.staticflickr.com/65535/53626643642_8e7283e1c0_c.jpg) ![](https://live.staticflickr.com/65535/53626643602_fcc7d06b5f.jpg)
 
 4. As a user, I want to be able to add my own reviews for games I've played.
 
-![]() ![]()
+![](https://live.staticflickr.com/65535/53626643567_b4bab65449.jpg)
 
 5. As a user, I want to be able to edit or delete my own reviews.
 
-![]() ![]()
+![](https://live.staticflickr.com/65535/53627865064_301df6c502_z.jpg) ![](https://live.staticflickr.com/65535/53627865074_b23dc909d5_z.jpg)
 
 6. As a user, I want to be able to see reviews from other users to help me decide whether to play a game.
 
-![]() ![]()
+![](https://live.staticflickr.com/65535/53627979010_b3bc2d3b98_z.jpg)
 
-7. As a user, I want to be able to create an account and log in to access additional features.
+7. As a user, I want to be able to create an account and log in.
 
-![]() ![]()
+![](https://live.staticflickr.com/65535/53627535891_2f4f18fdce_z.jpg) ![](https://live.staticflickr.com/65535/53627893894_0b35e792f9_z.jpg)
 
 8. As a user, I want the website to be visually appealing and easy to navigate.
 
