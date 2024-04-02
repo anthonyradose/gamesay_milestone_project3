@@ -211,15 +211,15 @@ The sign-up page provides a straightforward form where users can input their des
 
 ### CSS Validation
 
-.
+No errors were found.
 
-![CSSValidation]()
+![CSSValidation](https://live.staticflickr.com/65535/53626998416_01ca0dc674_b.jpg)
 
 ### JS Validation
 
-.
+No errors were found.
 
-![]()
+![JSValidation](https://live.staticflickr.com/65535/53627004771_20f0009ce2_b.jpg)
 
 ### PYTHON Validation
 
