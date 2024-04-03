@@ -166,7 +166,7 @@ The sign-up page provides a straightforward form where users can input their des
 
 - **Profile Page:**
 
-  - After logging in, users are directed to their personalized profile page, where they can access various account-related features and functionalities. The profile page displays the user's username and avatar, along with a summary of their submitted game reviews.
+  - After logging in, users are directed to their personalized profile page, where they can access various account-related features and functionalities. The profile page displays the user's username, along with a summary of their submitted game reviews.
 
 - **Game Reviews:**
 
@@ -182,7 +182,7 @@ The sign-up page provides a straightforward form where users can input their des
 
 - **Adding Reviews:**
 
-  - When the user selects the game they want to review, they are taking to the game_info page which displays a visually appealing covert art of the game along with all the relevant info, and then the ability to at their review and rating of the game with a form.
+  - When the user selects the game they want to review, they are taking to the game_info page which displays a visually appealing covert art of the game along with all the relevant info, and then the ability to add their review and rating of the game with a form.
 
 - **Editing and Deleting Reviews:**
 
@@ -197,26 +197,27 @@ The sign-up page provides a straightforward form where users can input their des
 
 - [HTML5](https://en.wikipedia.org/wiki/HTML) (was used for structuring and presenting content of the website)
 - [CSS](https://en.wikipedia.org/wiki/CSS) (used for the styling of the content)
-- [JS](https://en.wikipedia.org/wiki/JS) (used for timeout functionality)
-- [Google Fonts](https://fonts.google.com/) (used for all the font styling within the project, font used was Roboto, and sans-serif for back-up)
-- [Bootstrap](https://www.bootstrapcdn.com/) (used for the responsiveness and additional styling)
+- [JS](https://en.wikipedia.org/wiki/JavaScript) (used for timeout functionality)
+- [Google Fonts](https://fonts.google.com) (used for all the font styling within the project, font used was Roboto, and sans-serif for back-up)
+- [Bootstrap](https://getbootstrap.com) (used for the responsiveness and additional styling)
 - [RAWG](https://rawg.io/apidocs) (API used for retrieving video game info)
-- [flaticon](https://www.flaticon.com/) (used for the various custom icons)
-- [Chrome](https://www.google.com/intl/en_uk/chrome/) (used to debug and test the source code using HTML5 and to test site responsiveness)
-- [GitHub](https://github.com/) (used to create the repository and store the projects code after pushed from Git)
-- [Codeanywhere](https://codeanywhere.com/) (used for the editing code of project)
-- [vscode](https://code.visualstudio.com/) (used for editing code of project)
-- [W3C Markup](https://validator.w3.org/) (used for validating the html5 code)
-- [Jigsaw Validator](https://jigsaw.w3.org/css-validator/) (used for validating the CSS code)
-- [Webaim Contrast Checker](https://webaim.org/resources/contrastchecker/) (Used for validating color contrast for accessibility)
-- [Jshint](https://jshint.com/) (Used for JavaScript validation)
-- [Flask](https://flask.palletsprojects.com/en/3.0.x/)(used for building of app)
-- [Jinja](https://jinja.palletsprojects.com/en/3.1.x/)(used for html templating)
-- [Python](https://www.python.org/)(used for app logic)
-- [PyMongo](https://pymongo.readthedocs.io/en/stable/)(used for interacting with mongodb)
-- [Heroku](https://www.heroku.com/)(used for deployment of app)
-- [MongoDB](https://www.mongodb.com/)(used for database)
-- [Am I Responsive?](https://ui.dev/amiresponsive)(used for responsiveness testing)
+- [flaticon](https://www.flaticon.com) (used for the various custom icons)
+- [Chrome](https://www.google.com/intl/en_uk/chrome) (used to debug and test the source code using HTML5 and to test site responsiveness)
+- [GitHub](https://github.com) (used to create the repository and store the projects code after pushed from Git)
+- [Codeanywhere](https://codeanywhere.com) (used for editing code of project)
+- [Gitpod](https://www.gitpod.io/) (used for editing code of project)
+- [vscode](https://code.visualstudio.com) (used for editing code of project)
+- [W3C Markup](https://validator.w3.org) (used for validating the html5 code)
+- [Jigsaw Validator](https://jigsaw.w3.org/css-validator) (used for validating the CSS code)
+- [Webaim Contrast Checker](https://webaim.org/resources/contrastchecker) (Used for validating color contrast for accessibility)
+- [Jshint](https://jshint.com) (Used for JavaScript validation)
+- [Flask](https://flask.palletsprojects.com/en/3.0.x) (used for building of app)
+- [Jinja](https://jinja.palletsprojects.com/en/3.1.x) (used for html templating)
+- [Python](https://www.python.org) (used for app logic)
+- [PyMongo](https://pymongo.readthedocs.io/en/stable) (used for interacting with mongodb)
+- [Heroku](https://www.heroku.com) (used for deployment of app)
+- [MongoDB](https://www.mongodb.com) (used for database)
+- [Am I Responsive?](https://ui.dev/amiresponsive) (used for responsiveness testing)
 
 ---
 
@@ -262,7 +263,9 @@ No errors were found.
 |----------------------------|--------------------------------------------------------------|---------|
 | Evaluate contrast and color schemes for readability and accessibility | Colors and contrasts should be chosen to ensure readability for users with visual impairments. | Pass        |
 
-## Responsiveness Testing: ##
+---
+
+## Responsive Testing: ##
 
 | Test Case                  | Expected Result                                              | Outcome |
 |----------------------------|--------------------------------------------------------------|---------|
@@ -314,6 +317,8 @@ No errors were found.
 | View user profile  | User profile details and submitted reviews should be displayed | Pass    |
 | Delete user account| User account and associated reviews should be deleted | Pass    |
 
+---
+
 ## Database Management Testing: ##
 
 | Test Case            | Expected Result                                | Outcome |
@@ -324,6 +329,8 @@ No errors were found.
 | View Profile     | Profile of user in database should be viewable | Pass    |
 | Sign Up      | User info should be added to database | Pass    |
 | Delete Account   | User's info and reviews should be removed from database   | Pass    |
+
+---
 
 ## Deployment Testing: ##
 
@@ -338,18 +345,26 @@ No errors were found.
 **With Heroku:**
 
 1. Sign in to your Heroku account or sign up for a new one.
+   
 2.	Connect your Heroku account to your GitHub account:
     * Navigate to the Heroku Dashboard.
     * Click on the "New" button and select "Create new app."
     * Give your app a unique name and choose the region closest to you.
     * Click "Create app."
     * In the "Deployment method" section, select "GitHub."
+      
 3. Search for the repository you want to deploy from your GitHub account.
-4.	Once you've connected your GitHub repository, you can choose to either deploy the app automatically when changes are pushed to GitHub or manually deploy from the Heroku Dashboard.
+   
+4.	Once you've connected your GitHub repository, you can choose to either deploy the app automatically when changes are pushed to GitHub or manually deploy.
+   
 5. If you choose automatic deploys, select the branch you want to deploy from and enable automatic deploys.
-6.	If you prefer manual deploys, you can trigger a deployment manually by clicking the "Deploy Branch" button on the Heroku Dashboard.
+   
+6.	If you prefer manual deploys, you can trigger a deployment manually by clicking the "Deploy Branch" button.
+   
 7. Heroku will build your app using your project's build scripts and dependencies specified in your repository.
+   
 8. Once the build is complete, you can view your deployed application by clicking the "View" button on the Heroku Dashboard.
+   
 9.	You can manage your deployed application settings and view logs from the Heroku Dashboard. 
 Remember to set up any necessary configuration variables (such as environment variables) on the settings page.
 
@@ -373,11 +388,11 @@ Remember to set up any necessary configuration variables (such as environment va
 
 ## Credits & Acknowledgements
 
-- [Flaticon](https://www.flaticon.com/) (For custom icons)
-- [Freepik](https://www.freepik.com/) (For custom icons)
+- [Flaticon](https://www.flaticon.com) (For custom icons)
+- [Freepik](https://www.freepik.com) (For custom icons)
 - [RAWG](https://rawg.io/apidocs) (for amazing api service!)
-- [Twitch](https://www.twitch.tv/) (for inspiration!)
-- [IGDB](https://www.igdb.com/) (for inspiration!)
-- [Metacritic](https://www.metacritic.com/) (for inspiration!)
+- [Twitch](https://www.twitch.tv) (for inspiration!)
+- [IGDB](https://www.igdb.com) (for inspiration!)
+- [Metacritic](https://www.metacritic.com) (for inspiration!)
 - Video Games! 
 - My mentor Marcel for his support, encouragement, advice and guidance throughout the developing of this app.
