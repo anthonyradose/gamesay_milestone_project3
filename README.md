@@ -1,6 +1,6 @@
 # GameSay
 
-![GameSay]()
+![GameSay](https://live.staticflickr.com/65535/53627602682_e5173a5508_z.jpg)
 
 Welcome to GameSay!
 
@@ -10,7 +10,7 @@ This game review app provides people a space to share their experiences, insight
 
 Sign up today to have your say on your favorite (or not so favorite) video games!
 
-The live website can be found [here]()
+The live website can be found [here](https://gamesay-0e0d80bdb72b.herokuapp.com/)
 
 ---
 
@@ -24,6 +24,12 @@ The live website can be found [here]()
 ### Purpose of Project -
 
 Many video game sites often overwhelm users with an abundance of content, including irrelevant information and intrusive promotional pop-ups. This project aims to streamline the video game consumer's experience, by cutting through the noise and focusing on the essential info of a video game, in particular if it's worth playing or not.
+
+Value to Users:
+- Community-driven Reviews: Users can read reviews from fellow gamers, offering insight and opinions on different games.
+- Streamlined User Experience: The application's clean and modern design ensures a user-friendly experience, minimizing distractions and focusing on essential information.
+- Convenient Accessibility: With features like search functionality and detailed game information, users can easily find the games they're interested in and contribute reviews.
+- User Engagement: Through functionalities like user profiles and the ability to edit or delete reviews, GameSay encourages user engagement and interaction within the gaming community.
 
 ---
 
@@ -260,7 +266,7 @@ No errors were found.
 
 | Test Case                  | Expected Result                                              | Outcome |
 |----------------------------|--------------------------------------------------------------|---------|
-| Tested the application on various devices and screen sizes to ensure a consistent and user-friendly experience. | Pass        |
+| Tested the application on various devices and screen sizes | Should be responsive to different breakpoints and devices  |Pass |
 
 ---
 
@@ -276,7 +282,7 @@ No errors were found.
 | Click on "Sign Up"    | Should navigate to the sign-up page       | Pass    |
 | Click on "Log In"     | Should navigate to the log-in page        | Pass    |
 | Click on "Profile"    | Should navigate to the user's profile page | Pass    |
-| Click on "Log Out"    | Should log the user out and redirect to the homepage |     |
+| Click on "Log Out"    | Should log the user out  | Pass    |
 
 ### Add Game Functionality
 
@@ -319,12 +325,33 @@ No errors were found.
 | Sign Up      | User info should be added to database | Pass    |
 | Delete Account   | User's info and reviews should be removed from database   | Pass    |
 
+## Deployment Testing: ##
+
+| Test Case            | Expected Result                                | Outcome |
+|----------------------|------------------------------------------------|---------|
+| Deployed App matches development version      | The deployed website should mirror the functionality and appearance of the development version. | Pass    |
+
+---
+
 ## Deployment
 
 **With Heroku:**
 
-.
-
+1. Sign in to your Heroku account or sign up for a new one.
+2.	Connect your Heroku account to your GitHub account:
+    * Navigate to the Heroku Dashboard.
+    * Click on the "New" button and select "Create new app."
+    * Give your app a unique name and choose the region closest to you.
+    * Click "Create app."
+    * In the "Deployment method" section, select "GitHub."
+3. Search for the repository you want to deploy from your GitHub account.
+4.	Once you've connected your GitHub repository, you can choose to either deploy the app automatically when changes are pushed to GitHub or manually deploy from the Heroku Dashboard.
+5. If you choose automatic deploys, select the branch you want to deploy from and enable automatic deploys.
+6.	If you prefer manual deploys, you can trigger a deployment manually by clicking the "Deploy Branch" button on the Heroku Dashboard.
+7. Heroku will build your app using your project's build scripts and dependencies specified in your repository.
+8. Once the build is complete, you can view your deployed application by clicking the "View" button on the Heroku Dashboard.
+9.	You can manage your deployed application settings and view logs from the Heroku Dashboard. 
+Remember to set up any necessary configuration variables (such as environment variables) on the settings page.
 
 **Fork and Clone Repository:**
 
