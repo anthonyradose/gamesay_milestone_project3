@@ -1,5 +1,3 @@
-README:
-
 # GameSay
 
 ![GameSay]()
@@ -26,6 +24,8 @@ The live website can be found [here]()
 ### Purpose of Project -
 
 Many video game sites often overwhelm users with an abundance of content, including irrelevant information and intrusive promotional pop-ups. This project aims to streamline the video game consumer's experience, by cutting through the noise and focusing on the essential info of a video game, in particular if it's worth playing or not.
+
+---
 
 ### User Stories -
 
@@ -57,9 +57,7 @@ Many video game sites often overwhelm users with an abundance of content, includ
 
 ![](https://live.staticflickr.com/65535/53627535891_2f4f18fdce_z.jpg) ![](https://live.staticflickr.com/65535/53627893894_0b35e792f9_z.jpg)
 
-8. As a user, I want the website to be visually appealing and easy to navigate.
-
-![]() ![]()
+---
 
 ### Web Design -
 
@@ -75,9 +73,11 @@ The color palette is vibrant and dynamic, mirroring the energy and excitement sy
 
 The app exclusively uses Roboto. By adopting a clean and accessible font, the design reflects contemporary trends while also ensuring readability.
 
+---
+
 ### Wireframes:
 
-The site's wireframes were made with balsalmiq wireframes.
+The site's wireframes were made with balsamiq wireframes.
 
 | Home Page:                  |     |
 | --------------------------- | --- |
@@ -141,7 +141,9 @@ The site's wireframes were made with balsalmiq wireframes.
 - **Account Management:**
   - Users can delete their accounts, which also deletes associated reviews.
 
-Website Walkthrough -
+---
+
+## Website Walkthrough -
 
 - **Home Page:**
 
@@ -189,27 +191,30 @@ The sign-up page provides a straightforward form where users can input their des
 
 - [HTML5](https://en.wikipedia.org/wiki/HTML) (was used for structuring and presenting content of the website)
 - [CSS](https://en.wikipedia.org/wiki/CSS) (used for the styling of the content)
-- [JS](https://en.wikipedia.org/wiki/JS) (used for)
+- [JS](https://en.wikipedia.org/wiki/JS) (used for timeout functionality)
 - [Google Fonts](https://fonts.google.com/) (used for all the font styling within the project, font used was Roboto, and sans-serif for back-up)
 - [Bootstrap](https://www.bootstrapcdn.com/) (used for the responsiveness and additional styling)
-- RAWG
+- [RAWG](https://rawg.io/apidocs) (API used for retrieving video game info)
 - [flaticon](https://www.flaticon.com/) (used for the various custom icons)
 - [Chrome](https://www.google.com/intl/en_uk/chrome/) (used to debug and test the source code using HTML5 and to test site responsiveness)
 - [GitHub](https://github.com/) (used to create the repository and store the projects code after pushed from Git)
-- [Codeanywhere](https://codeanywhere.com/) (used for the editing of code within the project for the site)
-- [vscode](https://code.visualstudio.com/) 
+- [Codeanywhere](https://codeanywhere.com/) (used for the editing code of project)
+- [vscode](https://code.visualstudio.com/) (used for editing code of project)
 - [W3C Markup](https://validator.w3.org/) (used for validating the html5 code)
 - [Jigsaw Validator](https://jigsaw.w3.org/css-validator/) (used for validating the CSS code)
 - [Webaim Contrast Checker](https://webaim.org/resources/contrastchecker/) (Used for validating color contrast for accessibility)
 - [Jshint](https://jshint.com/) (Used for JavaScript validation)
-- 
-- [Am I Responsive?](https://ui.dev/amiresponsive)(Used for responsiveness testing)
+- [Flask](https://flask.palletsprojects.com/en/3.0.x/)(used for building of app)
+- [Jinja](https://jinja.palletsprojects.com/en/3.1.x/)(used for html templating)
+- [Python](https://www.python.org/)(used for app logic)
+- [PyMongo](https://pymongo.readthedocs.io/en/stable/)(used for interacting with mongodb)
+- [Heroku](https://www.heroku.com/)(used for deployment of app)
+- [MongoDB](https://www.mongodb.com/)(used for database)
+- [Am I Responsive?](https://ui.dev/amiresponsive)(used for responsiveness testing)
 
 ---
 
-## Testing
-
-.
+## Testing & Validation
 
 ### HTML Validation
 
@@ -257,7 +262,6 @@ No errors were found.
 |----------------------------|--------------------------------------------------------------|---------|
 | Tested the application on various devices and screen sizes to ensure a consistent and user-friendly experience. | Pass        |
 
-
 ---
 
 ## Functionality Testing: ##
@@ -304,11 +308,18 @@ No errors were found.
 | View user profile  | User profile details and submitted reviews should be displayed | Pass    |
 | Delete user account| User account and associated reviews should be deleted | Pass    |
 
+## Database Management Testing: ##
 
+| Test Case            | Expected Result                                | Outcome |
+|----------------------|------------------------------------------------|---------|
+| Add game review      | Review should be added successfully to the database | Pass    |
+| Edit game review     | Changes to review should be saved successfully to database | Pass    |
+| Delete game review   | Review should be deleted from the database   | Pass    |
+| View Profile     | Profile of user in database should be viewable | Pass    |
+| Sign Up      | User info should be added to database | Pass    |
+| Delete Account   | User's info and reviews should be removed from database   | Pass    |
 
 ## Deployment
-
-.
 
 **With Heroku:**
 
@@ -336,11 +347,10 @@ No errors were found.
 ## Credits & Acknowledgements
 
 - [Flaticon](https://www.flaticon.com/) (For custom icons)
-- RAWG
-- 
-- .
-- .
-- .
-- .
-- .
+- [Freepik](https://www.freepik.com/) (For custom icons)
+- [RAWG](https://rawg.io/apidocs) (for amazing api service!)
+- [Twitch](https://www.twitch.tv/) (for inspiration!)
+- [IGDB](https://www.igdb.com/) (for inspiration!)
+- [Metacritic](https://www.metacritic.com/) (for inspiration!)
+- Video Games! 
 - My mentor Marcel for his support, encouragement, advice and guidance throughout the developing of this app.
