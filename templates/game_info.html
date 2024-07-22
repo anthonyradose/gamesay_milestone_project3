@@ -39,8 +39,13 @@
                 </li>
                 <!-- Game Modes -->
                 <li class="list-group-item"><strong>Game-Modes:</strong>
-                    {% set game_modes = relevant_tags | join(", ") %}
+                    {% if relevant_tags %}
+                        {% set game_modes = relevant_tags | join(", ") %}
+                        {{ game_modes }}
+                    {% else %}
+                    {% set game_modes = "Info unavailable" %}
                     {{ game_modes }}
+                    {% endif %}
                 </li>
             </ul>
         </div>

@@ -1,6 +1,6 @@
 import os  # Importing necessary modules
-import json
 import requests
+from requests.exceptions import HTTPError
 import math
 from flask import (Flask, flash, render_template, redirect,
                    request, session, url_for)
@@ -14,9 +14,6 @@ if os.path.exists("env.py"):  # Check if environment file exists
 
 app = Flask(__name__)  # Initialize Flask app
 
-# Fetching API key and base URL from environment variables
-RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
-RAWG_API_URL = "https://api.rawg.io/api/games"
 
 # Setting up MongoDB connection
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
@@ -27,6 +24,17 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 # Initialize PyMongo
 mongo = PyMongo(app)
+
+
+# Fetching API key and base URL from environment variables
+RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
+RAWG_API_URL = "https://api.rawg.io/api/games"
+
+
+def fetch_api_data(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
 
 
 @app.route("/")
@@ -47,17 +55,14 @@ def sign_up():
     if request.method == "POST":
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
-
         if existing_user:
             flash("User already exists")
             return redirect(url_for("sign_up"))
-
         sign_up = {
             "username": request.form.get("username").lower(),
             "password": generate_password_hash(request.form.get("password"))
         }
         mongo.db.users.insert_one(sign_up)
-
         session["user"] = request.form.get("username").lower()
         flash("Sign up Successful!")
         return redirect(url_for("profile", username=session["user"]))
@@ -73,7 +78,6 @@ def log_in():
     if request.method == "POST":
         existing_user = mongo.db.users.find_one(
             {"username": request.form.get("username").lower()})
-
         if existing_user:
             if check_password_hash(
                     existing_user["password"], request.form.get("password")):
@@ -84,12 +88,20 @@ def log_in():
             else:
                 flash("Incorrect Username and/or Password")
                 return redirect(url_for("log_in"))
-
         else:
             flash("Incorrect Username and/or Password")
             return redirect(url_for("log_in"))
-
     return render_template("log_in.html")
+
+
+@app.route("/log_out")
+def log_out():
+    """
+    Log out user and redirect to log in page
+    """
+    flash("You've been logged out")
+    session.pop("user")
+    return redirect(url_for("log_in"))
 
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
@@ -116,16 +128,6 @@ def profile(username):
                            page=page)
 
 
-@app.route("/log_out")
-def log_out():
-    """
-    Log out user and redirect to log in page
-    """
-    flash("You've been logged out")
-    session.pop("user")
-    return redirect(url_for("log_in"))
-
-
 def fetch_game_reviews(page, per_page):
     """
     Fetch game reviews from database
@@ -145,7 +147,6 @@ def get_game_reviews():
     page = request.args.get("page", 1, type=int)
     per_page = 5
     games, total_reviews, total_pages = fetch_game_reviews(page, per_page)
-
     return render_template("game_reviews.html",
                            games=games,
                            per_page=per_page,
@@ -166,20 +167,12 @@ def handle_search_results(query, page, per_page):
     """
     Handle search results retrieval from the RAWG API
     """
-    start_index = (page - 1) * per_page
-
-    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={
-        query}&page_size={per_page}&page={page}"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        games = data.get("results", [])
-        total_results = data.get("count", 0)
-        total_pages = math.ceil(total_results / per_page)
-        return games, total_results, total_pages
-    else:
-        return "Error searching for the game."
+    url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}&page_size={per_page}&page={page}"
+    data = fetch_api_data(url)
+    games = data.get("results", [])
+    total_results = data.get("count", 0)
+    total_pages = math.ceil(total_results / per_page)
+    return games, total_results, total_pages
 
 
 @app.route("/search_results", methods=["GET", "POST"])
@@ -191,13 +184,16 @@ def search_results():
         query = request.form.get("query")
     else:
         query = request.args.get("query")
-
     page = request.args.get("page", 1, type=int)
     per_page = 5
-
-    games, total_results, total_pages = handle_search_results(
-        query, page, per_page)
-
+    try:
+        games, total_results, total_pages = handle_search_results(query, page, per_page)
+        if not games:
+            flash("No games found.")
+            return redirect(url_for("search_game"))
+    except (HTTPError, Exception):
+        flash("Error searching for game.")
+        return redirect(url_for("search_game"))
     return render_template("search_results.html",
                            games=games,
                            total_results=total_results,
@@ -215,26 +211,9 @@ def game_info():
     game = request.args.get("game")
     game_dict = eval(game)
     url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
-    url_tags = f"https://api.rawg.io/api/tags?key={RAWG_API_KEY}"
-
-    response = requests.get(url)
-    if response.status_code == 200:
-        game_data = response.json()
-        response_tags = requests.get(url_tags)
-        if response_tags.status_code == 200:
-            tags_data = response_tags.json()
-
-            game_tags = set(tag['slug'] for tag in tags_data['results'])
-            relevant_tags = [tag['name'] for tag in game_data.get('tags', [])
-                             if 'singleplayer' in tag['slug'] or 'multiplayer'
-                             in tag['slug']]
-            return render_template("game_info.html",
-                                   game_data=game_data,
-                                   relevant_tags=relevant_tags)
-        else:
-            return f"Error fetching tags: {response_tags.status_code}"
-    else:
-        return f"Error fetching game details: {response.status_code}"
+    game_data = fetch_api_data(url)
+    relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug'] or 'co-op' in tag['slug']]
+    return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
 
 
 @app.route("/add_game", methods=["POST"])
@@ -318,15 +297,9 @@ def edit_review(review_id):
         if existing_review:
             game_id = existing_review["game_id"]
             url = f"{RAWG_API_URL}/{game_id}?key={RAWG_API_KEY}"
-            response = requests.get(url)
-            if response.status_code == 200:
-                game_data = response.json()
-                return render_template("profile.html", review=existing_review,
+            game_data = fetch_api_data(url)
+            return render_template("profile.html", review=existing_review,
                                        game_data=game_data)
-            else:
-                flash("Error fetching game information")
-                return redirect(url_for("profile",
-                                        username=session.get("user")))
         else:
             flash("Review not found")
             return redirect(url_for("profile", username=session.get("user")))

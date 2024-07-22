@@ -96,13 +96,16 @@
                                 </li>
                                 <!-- Game Modes -->
                                 <li><strong>Game-Modes:</strong>
-                                    {% set game_modes = game.tags | replace(",", ", ") | replace("[", "") | replace("]",
-                                    "") | replace("'", "") | trim %}
-                                    {% if game_modes | last == ',' %}
-                                    {{ game_modes[:-1] }}
+                                    {% set game_modes = game.tags | replace(",", ", ") | replace("[", "") | replace("]", "") | replace("'", "") | trim %}
+                                    {% if game_modes | length > 0 %}
+                                        {% if game_modes | last == ',' %}
+                                            {{ game_modes[:-1] }}
+                                        {% else %}
+                                            {{ game_modes }}
+                                        {% endif %}
                                     {% else %}
-                                    {{ game_modes }}
-                                    {% endif %}
+                                        Info unavailable
+                                    {% endif %}                                    
                                 </li>
                                 <!-- Review -->
                                 <li><strong>Review:</strong>
