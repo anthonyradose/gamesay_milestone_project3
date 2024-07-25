@@ -84,20 +84,23 @@ def log_in():
     """
     # Handling user log in process
     if request.method == "POST":
-        existing_user = mongo.db.users.find_one(
-            {"username": request.form.get("username").lower()})
-        if existing_user:
-            if check_password_hash(
-                    existing_user["password"], request.form.get("password")):
-                session["user"] = request.form.get("username").lower()
-                flash("Welcome, {}".format(request.form.get("username")))
-                return redirect(url_for(
-                    "profile", username=session["user"]))
+        try:
+            username = request.form.get("username").lower()
+            password = request.form.get("password")
+            existing_user = mongo.db.users.find_one({"username": username})
+            if existing_user:
+                if check_password_hash(existing_user["password"], password):
+                    session["user"] = username
+                    flash("Welcome, {}".format(username))
+                    return redirect(url_for("profile", username=username))
+                else:
+                    flash("Incorrect Username and/or Password")
+                    return redirect(url_for("log_in"))
             else:
-                flash("Incorrect Username and/or Password")
+                flash("User not found. Please check your username.")
                 return redirect(url_for("log_in"))
-        else:
-            flash("Incorrect Username and/or Password")
+        except Exception as e:
+            flash(f"An error occurred: {e}")
             return redirect(url_for("log_in"))
     return render_template("log_in.html")
 
