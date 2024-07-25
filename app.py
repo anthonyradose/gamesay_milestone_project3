@@ -26,12 +26,15 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 
-# Fetching API key and base URL from environment variables
+# Get API key and base URL from environment variables
 RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
 RAWG_API_URL = "https://api.rawg.io/api/games"
 
 
 def fetch_api_data(url):
+    """
+    Utility function to fetch and return data from RAWG API
+    """
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
@@ -40,7 +43,7 @@ def fetch_api_data(url):
 @app.route("/")
 def home():
     """
-    Fetches recent reviews and renders home page
+    Finds recent reviews and renders home page
     """
     recent_reviews = mongo.db.game_reviews.find().sort([('_id', -1)]).limit(3)
     return render_template("base.html", recent_reviews=recent_reviews)
@@ -53,19 +56,24 @@ def sign_up():
     """
     # Handling user sign up process
     if request.method == "POST":
-        existing_user = mongo.db.users.find_one(
-            {"username": request.form.get("username").lower()})
-        if existing_user:
-            flash("User already exists")
+        try:
+            username = request.form.get("username").lower()
+            password = request.form.get("password")
+            existing_user = mongo.db.users.find_one({"username": username})
+            if existing_user:
+                flash("User already exists")
+                return redirect(url_for("sign_up"))
+            sign_up = {
+                "username": username,
+                "password": generate_password_hash(password)
+            }
+            mongo.db.users.insert_one(sign_up)
+            session["user"] = username
+            flash("Sign up Successful!")
+            return redirect(url_for("profile", username=username))
+        except Exception as e:
+            flash(f"An error occurred: {e}")
             return redirect(url_for("sign_up"))
-        sign_up = {
-            "username": request.form.get("username").lower(),
-            "password": generate_password_hash(request.form.get("password"))
-        }
-        mongo.db.users.insert_one(sign_up)
-        session["user"] = request.form.get("username").lower()
-        flash("Sign up Successful!")
-        return redirect(url_for("profile", username=session["user"]))
     return render_template("sign_up.html")
 
 
@@ -128,9 +136,9 @@ def profile(username):
                            page=page)
 
 
-def fetch_game_reviews(page, per_page):
+def find_game_reviews(page, per_page):
     """
-    Fetch game reviews from database
+    Finds game reviews from database
     """
     start_index = (page - 1) * per_page
     total_reviews = mongo.db.game_reviews.count_documents({})
@@ -146,7 +154,7 @@ def get_game_reviews():
     """
     page = request.args.get("page", 1, type=int)
     per_page = 5
-    games, total_reviews, total_pages = fetch_game_reviews(page, per_page)
+    games, total_reviews, total_pages = find_game_reviews(page, per_page)
     return render_template("game_reviews.html",
                            games=games,
                            per_page=per_page,
@@ -165,7 +173,7 @@ def search_game():
 
 def handle_search_results(query, page, per_page):
     """
-    Handle search results retrieval from the RAWG API
+    Handle search results fetched from the RAWG API
     """
     url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}&page_size={per_page}&page={page}"
     data = fetch_api_data(url)

@@ -19,8 +19,10 @@
                         <label for="username" class="form-label">Username:</label>
                         <div class="input-group">
                             <span class="input-group-text"></span>
-                            <input id="username" name="username" type="text" minlength="5" maxlength="15"
-                                pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                            <input id="username" name="username" type="text" minlength="3" maxlength="20"
+                                pattern="^(?=.*[A-Za-z])[A-Za-z0-9\-_]{3,20}$" title="Username must be 3-20 characters long and can include letters, numbers, underscores, and hyphens."
+                                class="form-control" required>
+                                
                         </div>
                     </div>
                     <!-- Password Field -->
@@ -29,8 +31,9 @@
                         <label for="password" class="form-label">Password:</label>
                         <div class="input-group">
                             <span class="input-group-text"></span>
-                            <input id="password" name="password" type="password" minlength="5" maxlength="15"
-                                pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" required>
+                            <input id="password" name="password" type="password" minlength="8" maxlength="20"
+                                pattern="^(?!.*(.)\1{2,})[A-Za-z0-9\W_]{8,20}$"        title="Password must be 8-20 characters long and can include letters, numbers, and any special characters. Avoid simple repetitions."
+                                class="form-control" required>
                         </div>
                     </div>
                     <!-- Register Button -->
