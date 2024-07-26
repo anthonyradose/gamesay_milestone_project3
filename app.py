@@ -1,10 +1,11 @@
 import os  # Importing necessary modules
 import requests
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, RequestException
 import math
 from flask import (Flask, flash, render_template, redirect,
-                   request, session, url_for)
+                   request, session, url_for, abort)
 from flask_pymongo import PyMongo
+from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -33,11 +34,20 @@ RAWG_API_URL = "https://api.rawg.io/api/games"
 
 def fetch_api_data(url):
     """
-    Utility function to fetch and return data from RAWG API
+    Utility function to fetch and return data from RAWG API.
     """
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(url)
+        return response.json()
+    except HTTPError as http_err:
+        # Raise HTTPError to be handled by the caller
+        raise RuntimeError(f"HTTP error occurred: {http_err}") from http_err
+    except RequestException as req_err:
+        # Raise RequestException to be handled by the caller
+        raise RuntimeError(f"Request error occurred: {req_err}") from req_err
+    except Exception as err:
+        # Raise generic Exception to be handled by the caller
+        raise RuntimeError(f"An unexpected error occurred: {err}") from err
 
 
 @app.route("/")
@@ -52,112 +62,161 @@ def home():
 @app.route("/sign_up", methods=["GET", "POST"])
 def sign_up():
     """
-    User registration and redirection to profile page
+    Handle user registration and redirection to the profile page.
     """
-    # Handling user sign up process
+    # Prevent logged-in users from accessing the sign-up page
+    if "user" in session:
+        flash("You are already logged in.")
+        return redirect(url_for("profile", username=session["user"]))
     if request.method == "POST":
         try:
             username = request.form.get("username").lower()
             password = request.form.get("password")
+            # Check if the username already exists
             existing_user = mongo.db.users.find_one({"username": username})
             if existing_user:
-                flash("User already exists")
+                flash("User already exists.")
                 return redirect(url_for("sign_up"))
+            # Create a new user document
             sign_up = {
                 "username": username,
                 "password": generate_password_hash(password)
             }
             mongo.db.users.insert_one(sign_up)
+            # Log the user in and redirect to their profile
             session["user"] = username
-            flash("Sign up Successful!")
+            flash("Sign up successful!")
             return redirect(url_for("profile", username=username))
-        except Exception as e:
-            flash(f"An error occurred: {e}")
-            return redirect(url_for("sign_up"))
+        except PyMongoError:
+            # Handle database-specific errors
+            flash("A database error occurred. Please try again later.")
+            return redirect(url_for("home"))
+        except Exception:
+            # Handle other unexpected errors
+            flash("An unexpected error occurred. Please try again later.")
+            return redirect(url_for("home"))
+    # Render the sign-up page for GET requests
     return render_template("sign_up.html")
 
 
 @app.route("/log_in", methods=["GET", "POST"])
 def log_in():
     """
-    User authentication and redirection to profile page
+    Handle user authentication and redirection to the profile page.
     """
-    # Handling user log in process
+    # Prevent logged-in users from accessing the log-in page
+    if "user" in session:
+        flash("You are already logged in.")
+        return redirect(url_for("profile", username=session["user"]))
     if request.method == "POST":
         try:
             username = request.form.get("username").lower()
             password = request.form.get("password")
+            # Check if the user exists in the database
             existing_user = mongo.db.users.find_one({"username": username})
             if existing_user:
+                # Verify the password
                 if check_password_hash(existing_user["password"], password):
                     session["user"] = username
-                    flash("Welcome, {}".format(username))
+                    flash(f"Welcome, {username}!")
                     return redirect(url_for("profile", username=username))
                 else:
-                    flash("Incorrect Username and/or Password")
+                    flash("Incorrect Username and/or Password.")
                     return redirect(url_for("log_in"))
             else:
                 flash("User not found. Please check your username.")
                 return redirect(url_for("log_in"))
-        except Exception as e:
-            flash(f"An error occurred: {e}")
-            return redirect(url_for("log_in"))
+        except PyMongoError:
+            # Handle database-specific errors
+            flash("A database error occurred. Please try again later.")
+            return redirect(url_for("home"))
+        except Exception:
+            # Handle other unexpected errors
+            flash("An unexpected error occurred. Please try again later.")
+            return redirect(url_for("home"))
+    # Render the log-in page for GET requests
     return render_template("log_in.html")
 
 
 @app.route("/log_out")
 def log_out():
     """
-    Log out user and redirect to log in page
+    Log out user and redirect to log in page.
     """
-    flash("You've been logged out")
-    session.pop("user")
+    if "user" in session:
+        # User is logged in, perform logout
+        flash("You've been logged out")
+        session.pop("user")
+    else:
+        # No user session found
+        flash("You were not logged in.")
     return redirect(url_for("log_in"))
 
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
     """
-    Display user profile and associated reviews
+    Display user profile and associated reviews.
     """
     current_username = session.get("user")
-    page = request.args.get("page", 1, type=int)
-    per_page = 5
-    start_index = (page - 1) * per_page
-    user_reviews = mongo.db.game_reviews.find(
-        {"username": username}).skip(start_index).limit(per_page)
-    total_reviews = mongo.db.game_reviews.count_documents(
-        {"username": username})
-    total_pages = math.ceil(total_reviews / per_page)
-    return render_template("profile.html",
-                           username=username,
-                           current_username=current_username,
-                           user_reviews=user_reviews,
-                           per_page=per_page,
-                           total_reviews=total_reviews,
-                           total_pages=total_pages,
-                           page=page)
+    try:
+        page = request.args.get("page", 1, type=int)
+        per_page = 5
+        start_index = (page - 1) * per_page
+        user_reviews = mongo.db.game_reviews.find(
+            {"username": username}
+        ).skip(start_index).limit(per_page)
+
+        total_reviews = mongo.db.game_reviews.count_documents(
+            {"username": username}
+        )
+        total_pages = math.ceil(total_reviews / per_page)
+        return render_template("profile.html",
+                               username=username,
+                               current_username=current_username,
+                               user_reviews=user_reviews,
+                               per_page=per_page,
+                               total_reviews=total_reviews,
+                               total_pages=total_pages,
+                               page=page)
+    except PyMongoError:
+        flash("A database error occurred while fetching profile data. Please try again later.")
+        return redirect(url_for("home"))
+    except Exception:
+        flash("An unexpected error occurred. Please try again later.")
+        return redirect(url_for("home"))
 
 
 def find_game_reviews(page, per_page):
     """
-    Finds game reviews from database
-    """
-    start_index = (page - 1) * per_page
-    total_reviews = mongo.db.game_reviews.count_documents({})
-    total_pages = math.ceil(total_reviews / per_page)
-    games = mongo.db.game_reviews.find().skip(start_index).limit(per_page)
-    return games, total_reviews, total_pages
+    Finds game reviews from database.
+     """
+    try:
+        start_index = (page - 1) * per_page
+        total_reviews = mongo.db.game_reviews.count_documents({})
+        total_pages = math.ceil(total_reviews / per_page)
+        games = mongo.db.game_reviews.find().skip(start_index).limit(per_page)
+        return games, total_reviews, total_pages
+    except PyMongoError as pymongo_err:
+        # Raise RuntimeError for database errors
+        raise RuntimeError(f"Database error occurred: {pymongo_err}") from pymongo_err
+    except Exception as err:
+        # Raise RuntimeError for unexpected errors
+        raise RuntimeError(f"An unexpected error occurred: {err}") from err
 
 
 @app.route("/get_game_reviews")
 def get_game_reviews():
     """
-    Render game reviews from database
+    Render game reviews from the database.
     """
     page = request.args.get("page", 1, type=int)
     per_page = 5
-    games, total_reviews, total_pages = find_game_reviews(page, per_page)
+    try:
+        games, total_reviews, total_pages = find_game_reviews(page, per_page)
+    except RuntimeError as e:
+        flash(str(e))
+        return redirect(url_for("home"))
     return render_template("game_reviews.html",
                            games=games,
                            per_page=per_page,
@@ -169,28 +228,38 @@ def get_game_reviews():
 @app.route("/search_game")
 def search_game():
     """
-    Render the search game page
+    Render the search game page.
     """
+    # Check if user is logged in to access page.
+    if 'user' not in session:
+        flash("You need to be logged in to access the search page.")
+        return redirect(url_for("log_in"))
     return render_template("search_game.html")
 
 
 def handle_search_results(query, page, per_page):
     """
-    Handle search results fetched from the RAWG API
+    Handle search results fetched from the RAWG API.
     """
     url = f"{RAWG_API_URL}?key={RAWG_API_KEY}&search={query}&page_size={per_page}&page={page}"
-    data = fetch_api_data(url)
-    games = data.get("results", [])
-    total_results = data.get("count", 0)
-    total_pages = math.ceil(total_results / per_page)
-    return games, total_results, total_pages
+    try:
+        data = fetch_api_data(url)
+        games = data.get("results", [])
+        total_results = data.get("count", 0)
+        total_pages = math.ceil(total_results / per_page)
+        return games, total_results, total_pages
+    except RuntimeError as err:
+        raise RuntimeError(f"Failed to handle search results: {err}") from err
 
 
 @app.route("/search_results", methods=["GET", "POST"])
 def search_results():
     """
-    Render search game results
+    Display search results from the RAWG API.
     """
+    if 'user' not in session:
+        flash("You need to be logged in to view this page.")
+        return redirect(url_for("log_in"))
     if request.method == "POST":
         query = request.form.get("query")
     else:
@@ -202,8 +271,11 @@ def search_results():
         if not games:
             flash("No games found.")
             return redirect(url_for("search_game"))
-    except (HTTPError, Exception):
-        flash("Error searching for game.")
+    except RuntimeError as err:
+        flash(str(err))
+        return redirect(url_for("search_game"))
+    except Exception:
+        flash("An unexpected error occurred. Please try again later.")
         return redirect(url_for("search_game"))
     return render_template("search_results.html",
                            games=games,
@@ -217,14 +289,31 @@ def search_results():
 @app.route("/game_info")
 def game_info():
     """
-    Fetch detailed information about a specific game
+    Fetch detailed information about a specific game.
     """
+    # Check if user is logged in to access the page
+    if 'user' not in session:
+        flash("You need to be logged in to access game details.")
+        return redirect(url_for("log_in"))
     game = request.args.get("game")
-    game_dict = eval(game)
-    url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
-    game_data = fetch_api_data(url)
-    relevant_tags = [tag['name'] for tag in game_data.get('tags', []) if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug'] or 'co-op' in tag['slug']]
-    return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
+    if not game:
+        flash("No game specified.")
+        return redirect(url_for("search_game"))
+    try:
+        game_dict = eval(game)
+        url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
+        game_data = fetch_api_data(url)
+        relevant_tags = [
+            tag['name'] for tag in game_data.get('tags', [])
+            if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug'] or 'co-op' in tag['slug']
+        ]
+        return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
+    except RuntimeError as err:
+        flash(str(err))
+        return redirect(url_for("search_game"))
+    except Exception:
+        flash("An unexpected error occurred. Please try again later.")
+        return redirect(url_for("search_game"))
 
 
 @app.route("/add_game", methods=["POST"])
@@ -242,7 +331,6 @@ def add_game():
         if existing_review:
             flash("You have already reviewed this game.")
             return redirect(url_for("profile", username=username))
-
         # If user hasn't reviewed the game, proceed with adding the review
         name = request.form.get("name")
         background_image = request.form.get("background_image")
@@ -255,7 +343,6 @@ def add_game():
         tags = request.form.getlist("tags")
         review = request.form.get("review")
         rating = float(request.form.get("rating"))
-
         game = {
             "username": username,
             "game_id": game_id,
@@ -271,9 +358,7 @@ def add_game():
             "review": review,
             "rating": rating
         }
-
         mongo.db.game_reviews.insert_one(game)
-
         flash("Game added successfully!")
         return redirect(url_for("search_game"))
     else:
@@ -322,17 +407,13 @@ def delete_review(review_id):
     Delete a game review
     """
     review = mongo.db.game_reviews.find_one({"_id": ObjectId(review_id)})
-
     if not review:
         flash("Review not found")
         return redirect(url_for("profile", username=session.get("user")))
-
     if "user" not in session or session["user"] != review["username"]:
         abort(403)
-
     mongo.db.game_reviews.delete_one({"_id": ObjectId(review_id)})
     flash("Review deleted successfully")
-
     return redirect(url_for("profile", username=session.get("user")))
 
 
@@ -343,9 +424,7 @@ def delete_account():
     """
     if "user" in session:
         mongo.db.users.delete_one({"username": session["user"]})
-
         mongo.db.game_reviews.delete_many({"username": session["user"]})
-
         session.pop("user")
         flash("Your account and associated reviews have been deleted "
               "successfully.")
