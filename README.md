@@ -247,35 +247,34 @@ No errors were found.
 
 ![PythonValidation](https://live.staticflickr.com/65535/53626609727_756ee0e3d0_b.jpg)
 
-## Usability Testing: ##
+### Usability Testing:
 
-### User Interface Clarity and Intuitiveness
+#### User Interface Clarity and Intuitiveness
 
 | Test Case                  | Expected Result                                              | Outcome |
 |----------------------------|--------------------------------------------------------------|---------|
 | Locate and use main features/buttons (e.g., "Add," "Browse")     | Features/buttons should be easily visible and usable.        | Pass        |
 | Evaluate the clarity of labels and instructions                     | Labels and instructions should be clear and understandable.   |  Pass       |
 | Test the consistency of design elements (color scheme, fonts, layouts) | Design elements should be consistent throughout the application. | Pass        |
+| Check for user feedback mechanisms (e.g., flash messages) | Flash messages should be clear and appropriately visible. | Pass |
 
-### Accessibility Testing
+### Accessibility Testing:
 
 | Test Case                  | Expected Result                                              | Outcome |
 |----------------------------|--------------------------------------------------------------|---------|
 | Evaluate contrast and color schemes for readability and accessibility | Colors and contrasts should be chosen to ensure readability for users with visual impairments. | Pass        |
 
----
 
-## Responsive Testing: ##
+### Responsive Testing:
 
 | Test Case                  | Expected Result                                              | Outcome |
 |----------------------------|--------------------------------------------------------------|---------|
 | Tested the application on various devices and screen sizes | Should be responsive to different breakpoints and devices  |Pass |
 
----
 
-## Functionality Testing: ##
+### Functionality Testing:
 
-### Homepage Navigation
+#### Homepage Navigation
 
 | Test Case             | Expected Result                            | Outcome |
 |-----------------------|--------------------------------------------|---------|
@@ -287,7 +286,7 @@ No errors were found.
 | Click on "Profile"    | Should navigate to the user's profile page | Pass    |
 | Click on "Log Out"    | Should log the user out  | Pass    |
 
-### Add Game Functionality
+#### Add Game Functionality
 
 | Test Case                    | Expected Result                                   | Outcome |
 |------------------------------|---------------------------------------------------|---------|
@@ -295,13 +294,13 @@ No errors were found.
 | Submit empty form            | Form submission should be prevented and relevant error messages displayed | Pass    |
 | Add duplicate game           | Attempt to add a game with existing name should be prevented and appropriate error message displayed | Pass     |
 
-### Browse Games Functionality
+#### Browse Games Functionality
 
 | Test Case                | Expected Result                         | Outcome |
 |--------------------------|-----------------------------------------|---------|
 | Search for a game        | Search results should display relevant games | Pass    |
 
-### Game Reviews Functionality
+#### Game Reviews Functionality
 
 | Test Case            | Expected Result                                | Outcome |
 |----------------------|------------------------------------------------|---------|
@@ -310,16 +309,15 @@ No errors were found.
 | Edit game review     | Changes to review should be saved successfully | Pass    |
 | Delete game review   | Review should be deleted from the database   | Pass    |
 
-### User Profile Functionality
+#### User Profile Functionality
 
 | Test Case          | Expected Result                                      | Outcome |
 |--------------------|------------------------------------------------------|---------|
 | View user profile  | User profile details and submitted reviews should be displayed | Pass    |
 | Delete user account| User account and associated reviews should be deleted | Pass    |
 
----
 
-## Database Management Testing: ##
+### Database Management Testing:
 
 | Test Case            | Expected Result                                | Outcome |
 |----------------------|------------------------------------------------|---------|
@@ -330,13 +328,19 @@ No errors were found.
 | Sign Up      | User info should be added to database | Pass    |
 | Delete Account   | User's info and reviews should be removed from database   | Pass    |
 
----
 
-## Deployment Testing: ##
+### Deployment Testing:
 
 | Test Case            | Expected Result                                | Outcome |
 |----------------------|------------------------------------------------|---------|
 | Deployed App matches development version      | The deployed website should mirror the functionality and appearance of the development version. | Pass    |
+
+
+### Security Testing:
+
+| Test Case            | Expected Result                                | Outcome |
+|----------------------|------------------------------------------------|---------|
+| Test authentication and authorization      | Unauthorized users should be redirected or blocked from accessing protected content. | Pass    |
 
 ---
 
