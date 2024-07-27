@@ -342,6 +342,94 @@ No errors were found.
 |----------------------|------------------------------------------------|---------|
 | Test authentication and authorization      | Unauthorized users should be redirected or blocked from accessing protected content. | Pass    |
 
+### Bug fixes/improvements:
+
+Extensive error handling was added to functions in attempt to handle edge cases. For example:
+
+```
+def fetch_api_data(url):
+    """
+    Utility function to fetch and return data from RAWG API.
+    """
+    try:
+        response = requests.get(url)
+        return response.json()
+    except HTTPError as http_err:
+        # Raise HTTPError to be handled by the caller
+        raise RuntimeError(f"HTTP error occurred: {http_err}") from http_err
+    except RequestException as req_err:
+        # Raise RequestException to be handled by the caller
+        raise RuntimeError(f"Request error occurred: {req_err}") from req_err
+    except Exception as err:
+        # Raise generic Exception to be handled by the caller
+        raise RuntimeError(f"An unexpected error occurred: {err}") from err
+```
+
+```
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
+    """
+    Display user profile and associated reviews.
+    """
+    current_username = session.get("user")
+    try:
+        page = request.args.get("page", 1, type=int)
+        per_page = 5
+        start_index = (page - 1) * per_page
+        user_reviews = mongo.db.game_reviews.find(
+            {"username": username}
+        ).skip(start_index).limit(per_page)
+        total_reviews = mongo.db.game_reviews.count_documents(
+            {"username": username}
+        )
+        total_pages = math.ceil(total_reviews / per_page)
+        return render_template("profile.html",
+                               username=username,
+                               current_username=current_username,
+                               user_reviews=user_reviews,
+                               per_page=per_page,
+                               total_reviews=total_reviews,
+                               total_pages=total_pages,
+                               page=page)
+    except PyMongoError:
+        flash("A database error occurred while fetching profile data. Please try again later.")
+        return redirect(url_for("home"))
+    except Exception:
+        flash("An unexpected error occurred. Please try again later.")
+        return redirect(url_for("home"))
+```
+
+```
+@app.route("/game_info")
+def game_info():
+    """
+    Fetch detailed information about a specific game.
+    """
+    # Check if user is logged in to access the page
+    if 'user' not in session:
+        flash("You need to be logged in to access game details.")
+        return redirect(url_for("log_in"))
+    game = request.args.get("game")
+    if not game:
+        flash("No game specified.")
+        return redirect(url_for("search_game"))
+    try:
+        game_dict = eval(game)
+        url = f"{RAWG_API_URL}/{game_dict['id']}?key={RAWG_API_KEY}"
+        game_data = fetch_api_data(url)
+        relevant_tags = [
+            tag['name'] for tag in game_data.get('tags', [])
+            if 'singleplayer' in tag['slug'] or 'multiplayer' in tag['slug'] or 'co-op' in tag['slug']
+        ]
+        return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
+    except RuntimeError as err:
+        flash(str(err))
+        return redirect(url_for("search_game"))
+    except Exception:
+        flash("An unexpected error occurred. Please try again later.")
+        return redirect(url_for("search_game"))
+```
+
 ---
 
 ## Deployment
