@@ -221,6 +221,102 @@ The sign-up page provides a straightforward form where users can input their des
 
 ---
 
+## Data Schema
+
+### User Schema
+
+The users collection in MongoDB stores user account information. Each user document has the following fields:
+
+- username (string): A unique identifier for the user. It is stored in lowercase and used for login and profile identification.
+- password (string): The hashed password for the user. Stored securely using werkzeug.security.
+
+Example:
+
+```
+{
+  "username": "johndoe",
+  "password": "pbkdf2:sha256:150000$abc123$def456..."
+}
+```
+
+### Game Review Schema
+
+The game_reviews collection stores user-submitted game reviews. Each review document has the following fields:
+
+- username (string): The username of the reviewer. This links the review to a specific user.
+- game_id (string): A unique identifier for the game from the RAWG API.
+- name (string): The name of the game.
+- background_image (string): URL to the background image of the game.
+- description (string): A brief description of the game.
+- released (string): The release date of the game.
+- genres (array of strings): A list of genres associated with the game.
+- developers (array of strings): A list of developers for the game.
+- publishers (array of strings): A list of publishers for the game.
+- platforms (array of strings): A list of platforms the game is available on.
+- tags (array of strings): Tags related to the game, such as gameplay modes (e.g., 'singleplayer', 'multiplayer').
+- review (string): The user's review of the game.
+- rating (float): The rating given by the user, typically a value between 0 and 10.
+
+  Example:
+
+```
+{
+  "username": "johndoe",
+  "game_id": "12345",
+  "name": "Example Game",
+  "background_image": "http://example.com/image.jpg",
+  "description": "An exciting new game.",
+  "released": "2024-01-01",
+  "genres": ["Action", "Adventure"],
+  "developers": ["Example Developer"],
+  "publishers": ["Example Publisher"],
+  "platforms": ["PC", "PlayStation 5"],
+  "tags": ["multiplayer", "co-op"],
+  "review": "This game is fantastic with great gameplay!",
+  "rating": 9.0
+}
+```
+
+### RAWG API Interaction
+
+The application interacts with the RAWG API to fetch game details. While the API data structure is defined by RAWG, key elements include:
+
+- id (string): The unique identifier of the game.
+- name (string): The name of the game.
+- background_image (string): URL to the background image of the game.
+- description (string): A brief description of the game.
+- released (string): The release date of the game.
+- genres (array of objects): Each genre has a name and slug.
+- developers (array of objects): Each developer has a name.
+- publishers (array of objects): Each publisher has a name.
+- platforms (array of objects): Each platform has a name.
+- tags (array of objects): Each tag has a name and slug.
+
+Example:
+
+```
+{
+  "id": "12345",
+  "name": "Example Game",
+  "background_image": "http://example.com/image.jpg",
+  "description": "An exciting new game.",
+  "released": "2024-01-01",
+  "genres": [
+    {"name": "Action", "slug": "action"},
+    {"name": "Adventure", "slug": "adventure"}
+  ],
+  "developers": [{"name": "Example Developer"}],
+  "publishers": [{"name": "Example Publisher"}],
+  "platforms": [{"name": "PC"}, {"name": "PlayStation 5"}],
+  "tags": [
+    {"name": "Multiplayer", "slug": "multiplayer"},
+    {"name": "Co-op", "slug": "co-op"}
+  ]
+}
+```
+
+---
+
 ## Testing & Validation
 
 ### HTML Validation
