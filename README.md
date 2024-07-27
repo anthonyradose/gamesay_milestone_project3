@@ -388,6 +388,24 @@ Remember to set up any necessary configuration variables (such as environment va
 
 (Replace [repository URL] with the actual URL of your forked repository and [repository name] with the name of the cloned repository on your local machine.)
 
+**Run Locally:**
+
+1. Create an .env file in the root directory if it does not exist.
+
+2. Add necessary environment variables. For example:
+
+```
+import os
+
+os.environ.setdefault("IP", "0.0.0.0")
+os.environ.setdefault("PORT", "5000")
+os.environ.setdefault("SECRET_KEY", your_secret_key)
+os.environ.setdefault("MONGO_URI", your_mongo_uri)
+os.environ.setdefault("MONGO_DBNAME", your_mongo_dbname)
+```
+
+3. Run the development server with the command `python3 app.py runserver` and you should see in the terminal a link to the local url such as  `* Running on http://127.0.0.1:5000`
+
 ---
 
 ## Credits & Acknowledgements
