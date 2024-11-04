@@ -66,7 +66,7 @@ def sign_up():
     """
     # Prevent logged-in users from accessing the sign-up page
     if "user" in session:
-        flash("You are already logged in.")
+        flash("You are already logged in.", 'warning')
         return redirect(url_for("profile", username=session["user"]))
     if request.method == "POST":
         try:
@@ -75,7 +75,7 @@ def sign_up():
             # Check if the username already exists
             existing_user = mongo.db.users.find_one({"username": username})
             if existing_user:
-                flash("User already exists.")
+                flash("User already exists.", 'warning')
                 return redirect(url_for("sign_up"))
             # Create a new user document
             sign_up = {
@@ -85,15 +85,15 @@ def sign_up():
             mongo.db.users.insert_one(sign_up)
             # Log the user in and redirect to their profile
             session["user"] = username
-            flash("Sign up successful!")
+            flash("Sign up successful!", 'success')
             return redirect(url_for("profile", username=username))
         except PyMongoError:
             # Handle database-specific errors
-            flash("A database error occurred. Please try again later.")
+            flash("A database error occurred. Please try again later.", "danger")
             return redirect(url_for("home"))
         except Exception:
             # Handle other unexpected errors
-            flash("An unexpected error occurred. Please try again later.")
+            flash("An unexpected error occurred. Please try again later.", "danger")
             return redirect(url_for("home"))
     # Render the sign-up page for GET requests
     return render_template("sign_up.html")
@@ -118,21 +118,21 @@ def log_in():
                 # Verify the password
                 if check_password_hash(existing_user["password"], password):
                     session["user"] = username
-                    flash(f"Welcome, {username}!")
+                    flash(f"Welcome, {username}!", "info")
                     return redirect(url_for("profile", username=username))
                 else:
-                    flash("Incorrect Username and/or Password.")
+                    flash("Incorrect Username and/or Password.", "danger")
                     return redirect(url_for("log_in"))
             else:
-                flash("User not found. Please check your username.")
+                flash("User not found. Please check your username.", "danger")
                 return redirect(url_for("log_in"))
         except PyMongoError:
             # Handle database-specific errors
-            flash("A database error occurred. Please try again later.")
+            flash("A database error occurred. Please try again later.", "danger")
             return redirect(url_for("home"))
         except Exception:
             # Handle other unexpected errors
-            flash("An unexpected error occurred. Please try again later.")
+            flash("An unexpected error occurred. Please try again later.", "danger")
             return redirect(url_for("home"))
     # Render the log-in page for GET requests
     return render_template("log_in.html")
@@ -145,11 +145,11 @@ def log_out():
     """
     if "user" in session:
         # User is logged in, perform logout
-        flash("You've been logged out")
+        flash("You've been logged out", "info")
         session.pop("user")
     else:
         # No user session found
-        flash("You were not logged in.")
+        flash("You were not logged in.", "warning")
     return redirect(url_for("log_in"))
 
 
@@ -180,10 +180,10 @@ def profile(username):
                                total_pages=total_pages,
                                page=page)
     except PyMongoError:
-        flash("A database error occurred while fetching profile data. Please try again later.")
+        flash("A database error occurred while fetching profile data. Please try again later.", "danger")
         return redirect(url_for("home"))
     except Exception:
-        flash("An unexpected error occurred. Please try again later.")
+        flash("An unexpected error occurred. Please try again later.", "danger")
         return redirect(url_for("home"))
 
 
@@ -215,7 +215,7 @@ def get_game_reviews():
     try:
         games, total_reviews, total_pages = find_game_reviews(page, per_page)
     except RuntimeError as e:
-        flash(str(e))
+        flash(str(e), "danger")
         return redirect(url_for("home"))
     return render_template("game_reviews.html",
                            games=games,
@@ -232,7 +232,7 @@ def search_game():
     """
     # Check if user is logged in to access page.
     if 'user' not in session:
-        flash("You need to be logged in to access the search page.")
+        flash("You need to be logged in to access the search page.", "warning")
         return redirect(url_for("log_in"))
     return render_template("search_game.html")
 
@@ -258,7 +258,7 @@ def search_results():
     Display search results from the RAWG API.
     """
     if 'user' not in session:
-        flash("You need to be logged in to view this page.")
+        flash("You need to be logged in to view this page.", "warning")
         return redirect(url_for("log_in"))
     if request.method == "POST":
         query = request.form.get("query")
@@ -269,13 +269,13 @@ def search_results():
     try:
         games, total_results, total_pages = handle_search_results(query, page, per_page)
         if not games:
-            flash("No games found.")
+            flash("No games found.", "info")
             return redirect(url_for("search_game"))
     except RuntimeError as err:
-        flash(str(err))
+        flash(str(err), "danger")
         return redirect(url_for("search_game"))
     except Exception:
-        flash("An unexpected error occurred. Please try again later.")
+        flash("An unexpected error occurred. Please try again later.", "danger")
         return redirect(url_for("search_game"))
     return render_template("search_results.html",
                            games=games,
@@ -293,11 +293,10 @@ def game_info():
     """
     # Check if user is logged in to access the page
     if 'user' not in session:
-        flash("You need to be logged in to access game details.")
-        return redirect(url_for("log_in"))
+        flash("You need to be logged in to access game details.", "warning")
     game = request.args.get("game")
     if not game:
-        flash("No game specified.")
+        flash("No game specified.", "warning")
         return redirect(url_for("search_game"))
     try:
         game_dict = eval(game)
@@ -309,10 +308,10 @@ def game_info():
         ]
         return render_template("game_info.html", game_data=game_data, relevant_tags=relevant_tags)
     except RuntimeError as err:
-        flash(str(err))
+        flash(str(err), "danger")
         return redirect(url_for("search_game"))
     except Exception:
-        flash("An unexpected error occurred. Please try again later.")
+        flash("An unexpected error occurred. Please try again later.", "danger")
         return redirect(url_for("search_game"))
 
 
@@ -329,7 +328,7 @@ def add_game():
             {"username": username, "game_id": game_id}
         )
         if existing_review:
-            flash("You have already reviewed this game.")
+            flash("You have already reviewed this game.", "warning")
             return redirect(url_for("profile", username=username))
         # If user hasn't reviewed the game, proceed with adding the review
         name = request.form.get("name")
@@ -359,7 +358,7 @@ def add_game():
             "rating": rating
         }
         mongo.db.game_reviews.insert_one(game)
-        flash("Game added successfully!")
+        flash("Game added successfully!", "success")
         return redirect(url_for("search_game"))
     else:
         return "Method not allowed"
@@ -387,7 +386,7 @@ def edit_review(review_id):
                 "rating": rating
             }}
         )
-        flash("Game review updated successfully!")
+        flash("Game review updated successfully!", "success")
         return redirect(url_for("profile", username=session.get("user")))
     else:
         if existing_review:
@@ -397,7 +396,7 @@ def edit_review(review_id):
             return render_template("profile.html", review=existing_review,
                                        game_data=game_data)
         else:
-            flash("Review not found")
+            flash("Review not found", "warning")
             return redirect(url_for("profile", username=session.get("user")))
 
 
@@ -408,12 +407,12 @@ def delete_review(review_id):
     """
     review = mongo.db.game_reviews.find_one({"_id": ObjectId(review_id)})
     if not review:
-        flash("Review not found")
+        flash("Review not found", "warning")
         return redirect(url_for("profile", username=session.get("user")))
     if "user" not in session or session["user"] != review["username"]:
         abort(403)
     mongo.db.game_reviews.delete_one({"_id": ObjectId(review_id)})
-    flash("Review deleted successfully")
+    flash("Review deleted successfully", "success")
     return redirect(url_for("profile", username=session.get("user")))
 
 
@@ -427,10 +426,10 @@ def delete_account():
         mongo.db.game_reviews.delete_many({"username": session["user"]})
         session.pop("user")
         flash("Your account and associated reviews have been deleted "
-              "successfully.")
+              "successfully.", "success")
         return redirect(url_for("sign_up"))
     else:
-        flash("You must be logged in to delete your account.")
+        flash("You must be logged in to delete your account.", "warning")
         return redirect(url_for("log_in"))
 
 
