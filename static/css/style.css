@@ -72,7 +72,8 @@ button[aria-expanded="false"] span.read-less {
   height: 4em;
 }
 
-#usernameIcon,
+
+#emailIcon, #usernameIcon,
 #passwordIcon {
   height: 2em;
 }
