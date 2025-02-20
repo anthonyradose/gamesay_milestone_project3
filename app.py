@@ -70,15 +70,21 @@ def sign_up():
         return redirect(url_for("profile", username=session["user"]))
     if request.method == "POST":
         try:
+            email = request.form.get("email").lower()
             username = request.form.get("username").lower()
             password = request.form.get("password")
-            # Check if the username already exists
+            # Check if the username or email already exists
+            existing_email = mongo.db.users.find_one({"email": email})
             existing_user = mongo.db.users.find_one({"username": username})
             if existing_user:
                 flash("User already exists.", 'warning')
                 return redirect(url_for("sign_up"))
+            if existing_email:
+                flash("Email already exists.", 'warning')
+                return redirect(url_for("sign_up"))
             # Create a new user document
             sign_up = {
+                "email": email,
                 "username": username,
                 "password": generate_password_hash(password)
             }
