@@ -72,8 +72,8 @@ button[aria-expanded="false"] span.read-less {
   height: 4em;
 }
 
-
-#emailIcon, #usernameIcon,
+#emailIcon,
+#usernameIcon,
 #passwordIcon {
   height: 2em;
 }
@@ -225,6 +225,29 @@ button[aria-expanded="false"] span.read-less {
 }
 
 @media (min-width: 992px) {
+  nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+  }
+  nav a:not(#homeLink)::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 4px;
+    background: #00a3e1;
+    transition: width 0.2s ease-in-out;
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  nav a:not(#homeLink):hover::after {
+    width: 80%;
+  }
   .card-img-top {
     height: 200px;
   }
