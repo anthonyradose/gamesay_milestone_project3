@@ -108,29 +108,35 @@ def sign_up():
 @app.route("/log_in", methods=["GET", "POST"])
 def log_in():
     """
-    Handle user authentication and redirection to the profile page.
+    Handle user authentication with either username or email.
     """
     # Prevent logged-in users from accessing the log-in page
     if "user" in session:
         flash("You are already logged in.")
         return redirect(url_for("profile", username=session["user"]))
+    
     if request.method == "POST":
         try:
-            username = request.form.get("username").lower()
+            # Get the input value (could be username or email)
+            user_input = request.form.get("user_input").lower()
             password = request.form.get("password")
-            # Check if the user exists in the database
-            existing_user = mongo.db.users.find_one({"username": username})
+            
+            # Check if the input matches either a username or email
+            existing_user = mongo.db.users.find_one(
+                {"$or": [{"username": user_input}, {"email": user_input}]}
+            )
+            
             if existing_user:
                 # Verify the password
                 if check_password_hash(existing_user["password"], password):
-                    session["user"] = username
-                    flash(f"Welcome, {username}!", "info")
-                    return redirect(url_for("profile", username=username))
+                    session["user"] = existing_user["username"]
+                    flash(f"Welcome, {existing_user['username']}!", "info")
+                    return redirect(url_for("profile", username=existing_user["username"]))
                 else:
-                    flash("Incorrect Username and/or Password.", "danger")
+                    flash("Incorrect Username/Email and/or Password.", "danger")
                     return redirect(url_for("log_in"))
             else:
-                flash("User not found. Please check your username.", "danger")
+                flash("User not found. Please check your username or email.", "danger")
                 return redirect(url_for("log_in"))
         except PyMongoError:
             # Handle database-specific errors
@@ -140,9 +146,9 @@ def log_in():
             # Handle other unexpected errors
             flash("An unexpected error occurred. Please try again later.", "danger")
             return redirect(url_for("home"))
+            
     # Render the log-in page for GET requests
     return render_template("log_in.html")
-
 
 @app.route("/log_out")
 def log_out():
