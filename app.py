@@ -7,7 +7,10 @@ from flask import (Flask, flash, render_template, redirect,
 from flask_pymongo import PyMongo
 from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
+
+# Import blueprints
+from blueprints.auth import auth_bp  # Adjust import path as needed
 
 if os.path.exists("env.py"):  # Check if environment file exists
     import env
@@ -26,6 +29,11 @@ app.secret_key = os.environ.get("SECRET_KEY")
 # Initialize PyMongo
 mongo = PyMongo(app)
 
+# Make mongo available to the blueprint
+auth_bp.mongo = mongo
+
+# Register the blueprint
+app.register_blueprint(auth_bp)
 
 # Get API key and base URL from environment variables
 RAWG_API_KEY = os.environ.get("RAWG_API_KEY")
@@ -59,51 +67,7 @@ def home():
     return render_template("base.html", recent_reviews=recent_reviews)
 
 
-@app.route("/sign_up", methods=["GET", "POST"])
-def sign_up():
-    """
-    Handle user registration and redirection to the profile page.
-    """
-    # Prevent logged-in users from accessing the sign-up page
-    if "user" in session:
-        flash("You are already logged in.", 'warning')
-        return redirect(url_for("profile", username=session["user"]))
-    if request.method == "POST":
-        try:
-            email = request.form.get("email").lower()
-            username = request.form.get("username").lower()
-            password = request.form.get("password")
-            # Check if the username or email already exists
-            existing_email = mongo.db.users.find_one({"email": email})
-            existing_user = mongo.db.users.find_one({"username": username})
-            if existing_user:
-                flash("User already exists.", 'warning')
-                return redirect(url_for("sign_up"))
-            if existing_email:
-                flash("Email already exists.", 'warning')
-                return redirect(url_for("sign_up"))
-            # Create a new user document
-            sign_up = {
-                "email": email,
-                "username": username,
-                "password": generate_password_hash(password)
-            }
-            mongo.db.users.insert_one(sign_up)
-            # Log the user in and redirect to their profile
-            session["user"] = username
-            flash("Sign up successful!", 'success')
-            return redirect(url_for("profile", username=username))
-        except PyMongoError:
-            # Handle database-specific errors
-            flash("A database error occurred. Please try again later.", "danger")
-            return redirect(url_for("home"))
-        except Exception:
-            # Handle other unexpected errors
-            flash("An unexpected error occurred. Please try again later.", "danger")
-            return redirect(url_for("home"))
-    # Render the sign-up page for GET requests
-    return render_template("sign_up.html")
-
+# Remove the original sign_up route since it's now handled by the blueprint
 
 @app.route("/log_in", methods=["GET", "POST"])
 def log_in():
@@ -439,7 +403,7 @@ def delete_account():
         session.pop("user")
         flash("Your account and associated reviews have been deleted "
               "successfully.", "success")
-        return redirect(url_for("sign_up"))
+        return redirect(url_for("auth.sign_up"))  # Updated to use blueprint route
     else:
         flash("You must be logged in to delete your account.", "warning")
         return redirect(url_for("log_in"))
